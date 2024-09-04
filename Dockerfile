@@ -1,72 +1,52 @@
-# Set the python version as a build-time argument
-# with Python 3.12 as the default
-ARG PYTHON_VERSION=3.12-slim-bullseye
-FROM python:${PYTHON_VERSION}
+# syntax=docker/dockerfile:1
 
-# Create a virtual environment
-RUN python -m venv /opt/venv
+# Comments are provided throughout this file to help you get started.
+# If you need more help, visit the Dockerfile reference guide at
+# https://docs.docker.com/go/dockerfile-reference/
 
-# Set the virtual environment as the current location
-ENV PATH=/opt/venv/bin:$PATH
+# Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7
 
-# Upgrade pip
-RUN pip install --upgrade pip
+ARG PYTHON_VERSION=3.12.4
+FROM python:${PYTHON_VERSION}-slim as base
 
-# Set Python-related environment variables
+# Prevents Python from writing pyc files.
 ENV PYTHONDONTWRITEBYTECODE=1
+
+# Keeps Python from buffering stdout and stderr to avoid situations where
+# the application crashes without emitting any logs due to buffering.
 ENV PYTHONUNBUFFERED=1
 
-# Install os dependencies for our mini vm
-RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    libjpeg-dev \
-    libcairo2 \
-    gcc \
-    && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
 
-# Create the mini vm's code directory
-RUN mkdir -p /code
+# Create a non-privileged user that the app will run under.
+# See https://docs.docker.com/go/dockerfile-user-best-practices/
+ARG UID=10001
+RUN adduser \
+    --disabled-password \
+    --gecos "" \
+    --home "/nonexistent" \
+    --shell "/sbin/nologin" \
+    --no-create-home \
+    --uid "${UID}" \
+    appuser
 
-# Set the working directory to that same code directory
-WORKDIR /code
+# Download dependencies as a separate step to take advantage of Docker's caching.
+# Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
+# Leverage a bind mount to requirements.txt to avoid having to copy them into
+# into this layer.
+RUN --mount=type=cache,target=/root/.cache/pip \
+    --mount=type=bind,source=requirements.txt,target=requirements.txt \
+    python -m pip install -r requirements.txt
 
-# Copy the requirements file into the container
-COPY requirements.txt /tmp/requirements.txt
+# Switch to the non-privileged user to run the application.
+USER appuser
 
-# copy the project code into the container's working directory
-COPY ./src /code
+# Copy the source code into the container.
+COPY . .
 
-# Install the Python project requirements
-RUN pip install -r /tmp/requirements.txt
+# Expose the port that the application listens on.
+EXPOSE 8000
 
-RUN apt-get update && apt-get install -y nginx 
-
-
-COPY nginx.conf /etc/nginx/nginx.conf
-
-# set the Django default project name
-ARG PROJ_NAME="ispms"
-
-# create a bash script to run the Django project
-# this script will execute at runtime when
-# the container starts and the database is available
-RUN printf "#!/bin/bash\n" > ./paracord_runner.sh && \
-    printf "RUN_PORT=\"\${PORT:-8000}\"\n\n" >> ./paracord_runner.sh && \
-    printf "python manage.py migrate --no-input\n" >> ./paracord_runner.sh && \
-    printf "python manage.py runserver 0.0.0.0:8000\n" >> ./paracord_runner.sh 
-    # printf "gunicorn ${PROJ_NAME}.wsgi:application --bind \"0.0.0.0:\$RUN_PORT\"\n" >> ./paracord_runner.sh && \
-    # printf "nginx -g 'daemon off;'\n" >> ./paracord_runner.sh
-
-# make the bash script executable
-RUN chmod +x paracord_runner.sh
-
-# Clean up apt cache to reduce image size
-RUN apt-get remove --purge -y \
-    && apt-get autoremove -y \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-
-# Run the Django project via the runtime script
-# when the container starts
-CMD ./paracord_runner.sh
+# Run the application.
+# CMD ["python","src/manage.py","runserver","0.0.0.0:8000"]
+CMD gunicorn --bind 0.0.0.0:8000 src/ispms.wsgi
