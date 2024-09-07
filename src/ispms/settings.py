@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,11 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Django Allauth Apps 
-    "allauth_ui",
     "allauth",
     "allauth.account",
-    "widget_tweaks",
-    "slippers",
 
 
     # MyApps 
@@ -95,6 +93,14 @@ DATABASES = {
 
 
 # All Auth Config 
+LOGIN_REDIRECT_URL = "/dashboard"
+LOGOUT_REDIRECT_URL = "/"
+AUTH_USER_MODEL = "home.CustomUser"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+
+
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
@@ -149,3 +155,13 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+# SMTP email setup 
+EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST=config('EMAIL_HOST',cast=str,default=None)
+EMAIL_PORT=config('EMAIL_PORT',cast=str,default=None)
+EMAIL_HOST_USER=config('EMAIL_HOST_USER',cast=str,default=None)
+EMAIL_HOST_PASSWORD=config('EMAIL_HOST_PASSWORD',cast=str,default=None)
+EMAIL_USE_TLS=config('EMAIL_USE_TLS',cast=bool,default=None)
