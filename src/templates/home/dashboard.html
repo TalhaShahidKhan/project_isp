@@ -2,4 +2,8 @@
 {% block title %}Dashboard | ISP Management System{% endblock title %}
 {% block body %}
 <p>Dashboard</p>
+<a href="{% url "account_change_password" %}">Password Change</a>
+<a href="{% url "account_logout" %}">Logout</a>
+<a href="{% url "account_inactive" %}">Inactive Account</a>
+<a href="{% url "account_email" %}">Change Email</a>
 {% endblock body %}

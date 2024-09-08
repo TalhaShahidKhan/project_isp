@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Django Allauth Apps 
+    # Django Allauth Apps
     "allauth",
     "allauth.account",
 
@@ -95,10 +95,10 @@ DATABASES = {
 # All Auth Config 
 LOGIN_REDIRECT_URL = "/dashboard"
 LOGOUT_REDIRECT_URL = "/"
-AUTH_USER_MODEL = "home.CustomUser"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_CHANGE_EMAIL = True
 
 
 AUTHENTICATION_BACKENDS = [
