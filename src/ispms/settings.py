@@ -40,8 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Django Allauth Apps
+    "allauth_ui",
     "allauth",
     "allauth.account",
+    "widget_tweaks",
+    "slippers",
+
 
 
     # MyApps 
@@ -99,6 +103,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 ACCOUNT_CHANGE_EMAIL = True
+AUTH_USER_MODEL = "home.CustomUser"
 
 
 AUTHENTICATION_BACKENDS = [
