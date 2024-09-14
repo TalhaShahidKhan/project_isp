@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Package List{% endblock title %}
+
+{% block body %}
+
+
+    <div class="m-5 ">
+
+        <a href="{% url "customer:ar_add" %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Add Area</a>
+        <a href="{% url "home:home" %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Go Back</a>
+    </div>
+
+
+    {% for area in areas %}
+
+        <div class="my-4 flex gap-4 items-center justify-center">
+            <div class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{area.area_name}}</h5>
+            </div>
+            <div>
+                <a href="{% url "customer:ar_upd" area.id %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Update Area</a>
+            </div>
+            <div>
+                <form action="{% url "customer:ar_dlt" area.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Delete Area</button>
+                </form>
+            </div>
+        </div>
+
+    {% endfor %}
+
+{% endblock body %}

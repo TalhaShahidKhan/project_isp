@@ -1,9 +1,16 @@
 {% extends "base.html" %}
 {% block title %}Dashboard | ISP Management System{% endblock title %}
 {% block body %}
-<p>Dashboard</p>
-<a href="{% url "account_change_password" %}">Password Change</a>
-<a href="{% url "account_logout" %}">Logout</a>
-<a href="{% url "account_inactive" %}">Inactive Account</a>
-<a href="{% url "account_email" %}">Change Email</a>
+    <p>Dashboard</p>
+    <div class = "flex flex-col items-center justify-center">
+        <h1>{{request.user.username}}</h1>
+        <h1>{{request.user.email}}</h1>
+        <a href="{% url "account_change_password" %}">Password Change</a>
+        <a href="{% url "account_logout" %}">Logout</a>
+        <a href="{% url "account_inactive" %}">Inactive Account</a>
+        <a href="{% url "account_email" %}">Change Email</a>
+        <a href="{% url "customer:cmr_list" %}">Customers</a>
+        <a href="{% url "customer:pkg_list" %}">Packages</a>
+        <a href="{% url "customer:ar_list" %}">Areas</a>
+    </div>
 {% endblock body %}

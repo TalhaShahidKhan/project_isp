@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Package {{pkg.name}}{% endblock title %}
+
+
+{% block body %}
+
+
+    <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        <li class="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">{{pkg.name}}</li>
+        <li class="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">{{pkg.price}}</li>
+        <li class="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">{{pkg.speed}}</li>
+    </ul>
+
+    <div>
+        <a href="{% url "customer:pkg_list" %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Go Back</a>
+    </div>
+
+
+{% endblock body %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Update Package - {{area.name}}{% endblock title %}
+{% block body %}
+
+    <form method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit">Update Area</button>
+    </form>
+
+{% endblock body %}

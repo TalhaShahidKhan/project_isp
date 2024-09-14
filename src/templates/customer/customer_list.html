@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Customer List{% endblock title %}
+{% block body %}
+
+    <div class="m-5">
+
+        <a href="{% url "customer:cmr_add" %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Add Customer</a>
+        <a href="{% url "home:home" %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Go Back</a>
+    </div>
+
+    {% for cmr in cmrs %}
+        <div class="my-4 flex gap-4 items-center justify-center">
+            <a href="{% url "customer:cmr_det" cmr.id %}" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{cmr.name}}</h5>
+            </a>
+            <a href="{% url "customer:cmr_upd" cmr.id %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Update Customer</a>
+            <form action="{% url "customer:cmr_del" cmr.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Delete Customer</button>
+            </form>
+        </div>
+    {% endfor %}
+
+
+
+
+
+
+{% endblock body %}
+
+
+
