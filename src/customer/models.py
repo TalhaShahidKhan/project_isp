@@ -1,9 +1,23 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from datetime import date,timedelta
+from django.core.exceptions import ValidationError
 # Create your models here.
 
 User = get_user_model()
+
+
+
+
+class CustomerManager(models.Manager):
+    def create_customer(self, user, **kwargs):
+        if user.customers.count() >= user.subscription.plan.customer_limit:
+            raise ValidationError(f"You have reached your limit of { user.subscription.plan.customer_limit} customers.")
+        customer = self.create(user=user, **kwargs)
+        return customer
+
+
+
 
 class Area(models.Model):
     area_name = models.CharField(max_length=220)
@@ -38,6 +52,8 @@ class Customer(models.Model):
     duration = models.CharField(choices=duration_choices,max_length=110)
     expairy = models.DateTimeField(blank=True,null=True)
     active = models.BooleanField(default=False,null=True,blank=True)
+
+    objects = CustomerManager()
 
     def set_expairy(self):
         if self.duration == self.ONE_MONTH:

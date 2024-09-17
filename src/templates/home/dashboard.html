@@ -12,5 +12,22 @@
         <a href="{% url "customer:cmr_list" %}">Customers</a>
         <a href="{% url "customer:pkg_list" %}">Packages</a>
         <a href="{% url "customer:ar_list" %}">Areas</a>
+        <a href="{% url "subs:plans" %}">Explore Plans</a>
+
+
+        <div class="text-xl font-semibold text-center my-2 flex items-center justify-center gap-4">
+            <h1>Plan</h1>
+            {% if request.user.subscription.plan %}
+            <h3> {{request.user.subscription.plan}}</h3>
+            {% else %}
+            <h3>No Plan Activated</h3>
+            {% endif %}
+        </div>
+
+        {% if request.user.subscription.is_active %}
+        <a href="{% url "subs:upd_sub" request.user.subscription.id%}">Update Plan</a>
+        {% else %}
+        <a href="{% url "subs:plans" %}">Subscription</a>
+        {% endif %}
     </div>
 {% endblock body %}

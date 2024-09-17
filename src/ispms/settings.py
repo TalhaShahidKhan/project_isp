@@ -46,11 +46,10 @@ INSTALLED_APPS = [
     "widget_tweaks",
     "slippers",
 
-
-
     # MyApps 
     "home.apps.HomeConfig",
     "customer.apps.CustomerConfig",
+    "subscription.apps.SubscriptionConfig",
 ]
 
 MIDDLEWARE = [
@@ -171,3 +170,18 @@ EMAIL_PORT=config('EMAIL_PORT',cast=str,default=None)
 EMAIL_HOST_USER=config('EMAIL_HOST_USER',cast=str,default=None)
 EMAIL_HOST_PASSWORD=config('EMAIL_HOST_PASSWORD',cast=str,default=None)
 EMAIL_USE_TLS=config('EMAIL_USE_TLS',cast=bool,default=None)
+
+
+
+
+# Celery 
+CELERY_BROKER_URL = config('CELERY_BROKER_URL')  # Use Redis as the broker
+CELERY_RESULT_BACKEND = config('CELERY_RESULT_BACKEND')  # Use Redis as the result backend
+
+
+CELERY_REDBEAT_REDIS_URL =  CELERY_BROKER_URL
+
+
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+CELERY_REDIS_BACKEND_USE_SSL = False
+CELERY_BROKER_USE_SSL = False
