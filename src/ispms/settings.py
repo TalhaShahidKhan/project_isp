@@ -175,11 +175,15 @@ EMAIL_USE_TLS=config('EMAIL_USE_TLS',cast=bool,default=None)
 
 
 # Celery 
-CELERY_BROKER_URL = config('CELERY_BROKER_URL')  # Use Redis as the broker
-CELERY_RESULT_BACKEND = config('CELERY_RESULT_BACKEND')  # Use Redis as the result backend
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/1'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC' 
 
-
-CELERY_REDBEAT_REDIS_URL =  CELERY_BROKER_URL
+CELERY_BEAT_SCHEDULER = 'celery.beat.Scheduler'  # Default scheduler
+CELERY_BEAT_BROKER = 'redis://localhost:6379/2'
 
 
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True

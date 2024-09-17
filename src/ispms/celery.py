@@ -11,7 +11,7 @@ app = Celery('ispms')
 
 
 app.conf.beat_schedule = {
-    'task-name': {
+    'subs_check': {
         'task': 'subscription.tasks.check_active',
         'schedule': 30,
     },
