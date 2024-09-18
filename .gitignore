@@ -7,6 +7,12 @@ __pycache__/
 *.so
 
 
+
+# CELERY 
+*.bak
+*.dat
+*.dir
+
 node/
 *.code-workspace
 .vscode/* 

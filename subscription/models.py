@@ -40,9 +40,9 @@ class Subscription(models.Model):
     end_date = models.DateTimeField()
     is_active = models.BooleanField(default=True)
 
-
-    def deactivate_expired_subscriptions(self):
-        expired_subscriptions = self.objects.filter(end_date__lt=timezone.now(), is_active=True)
+    @staticmethod
+    def deactivate_expired_subscriptions(model):
+        expired_subscriptions = model.objects.filter(end_date__lt=timezone.now(), is_active=True)
         for subscription in expired_subscriptions:
             subscription.is_active = False
             subscription.save()
