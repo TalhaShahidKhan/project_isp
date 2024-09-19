@@ -2,6 +2,7 @@ amqp==5.2.0
 asgiref==3.8.1
 billiard==4.2.0
 celery==5.4.0
+celery-redbeat==2.2.0
 click==8.1.7
 click-didyoumean==0.3.1
 click-plugins==1.1.1
@@ -24,6 +25,7 @@ python-dateutil==2.9.0.post0
 python-decouple==3.8
 PyYAML==6.0.2
 redis==5.0.8
+RouterOS-api==0.18.1
 six==1.16.0
 slippers==0.6.2
 sqlparse==0.5.1
