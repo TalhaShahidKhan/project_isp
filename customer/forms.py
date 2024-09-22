@@ -6,7 +6,7 @@ from .models import Customer,Package,Area
 class CustomerCreateFrom(ModelForm):
     class Meta:
         model = Customer
-        fields = ["name","area","package","duration","phone_number","active"]
+        fields = ["customer_id","name","area","package","duration","phone_number","active"]
 
 
 class CustomerStatusForm(ModelForm):

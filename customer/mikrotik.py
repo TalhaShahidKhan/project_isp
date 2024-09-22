@@ -1,37 +1,42 @@
 import routeros_api
-import json
-connection = routeros_api.RouterOsApiPool(
-    '103.115.242.172',
-    username='talha',
-    password='123',
-    port=8989,
-    use_ssl=False,
-    ssl_verify=False,
-    ssl_verify_hostname=False,
-    ssl_context=None,
-)
-api = connection.get_api()
+from routeros_api.api import RouterOsApiPool,RouterOsApi
+from routeros_api.resource import RouterOsResource
+from django.contrib import messages
+from django.http import HttpRequest
 
-def mikrotik_all_users(api):
-    users_list=api.get_resource('/ip/address')
-    return list(users_list.get())
 
-def get_one_mikrotik_user(api,user_id):
-    users_list = api.get_resource('/ip/address')
-    user = users_list.get(id=user_id)
-    return user
-def add_mikrotik_user(api,id,*args, **kwargs):
-    api.add(id=id,*args, **kwargs)
-    added_user = get_one_mikrotik_user(api=api,id=id)
-    print("Mikrotik User add Successfull")
-    return added_user
 
-def user_enable(api,user_id):
-    user = api.get_resource('/ip/address')
-    enabled_user=user.set(id=user_id,disabled=False)
-    return enabled_user
+ppp_route = "/ppp/active"
 
-def user_disable(api,user_id):
-    user = api.get_resource('/ip/address')
-    disabled_user=user.set(id=user_id,disabled=False)
-    return disabled_user
+
+
+
+def add_customer_to_mikrotik(resource:RouterOsResource,request:HttpRequest,*args, **kwargs):
+    try:
+        new_customer = resource.add(*args, **kwargs)
+        if new_customer:
+            return messages.success(request,"Customer Added to Mikrotik")
+    except Exception as e:
+        return messages.error(request,f"{e}")
+    
+
+def update_customer_mik_details(resource:RouterOsResource,user_id,request:HttpRequest,*args, **kwargs):
+    try:
+        upd_customer = resource.set(id=user_id,*args, **kwargs)
+        if upd_customer:
+            return messages.success(request,"Details updated successfully")
+    except Exception as e:
+        return messages.error(request,f"{e}")
+    
+
+
+def delete_customer_mikrotik(resource:RouterOsResource,user_id,request:HttpRequest):
+    try:
+        upd_customer = resource.remove(id=user_id)
+        if upd_customer:
+            return messages.success(request,"Customer Deleted successfully")
+    except Exception as e:
+        return messages.error(request,f"{e}")
+    
+
+

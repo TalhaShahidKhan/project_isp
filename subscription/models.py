@@ -13,7 +13,7 @@ User = get_user_model()
 
 class SubscriptionPlan(models.Model):
     name = models.CharField(max_length=50)
-    customer_limit = models.PositiveIntegerField(max_length=10)
+    customer_limit = models.PositiveIntegerField()
     installation_fee = models.DecimalField(max_digits=10,decimal_places=2)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     duration = models.IntegerField(help_text="Duration in days")

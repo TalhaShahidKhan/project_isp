@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from datetime import date,timedelta
 from django.core.exceptions import ValidationError
+import json
 # Create your models here.
 
 User = get_user_model()
@@ -44,6 +45,7 @@ class Customer(models.Model):
         (ONE_MONTH,'1 Month'),
         (TENTH_OF_NEXT,'10th of next'),
     ]
+    customer_id = models.CharField(max_length=10,unique=True)
     name = models.CharField(max_length=110)
     phone_number = models.CharField(max_length=11,blank=False,null=False)
     admin = models.ForeignKey(User,related_name="customers",on_delete=models.CASCADE)
@@ -51,7 +53,7 @@ class Customer(models.Model):
     package = models.ForeignKey(Package,related_name="customers",on_delete=models.SET_NULL,null=True)
     duration = models.CharField(choices=duration_choices,max_length=110)
     expairy = models.DateTimeField(blank=True,null=True)
-    active = models.BooleanField(default=False,null=True,blank=True)
+    active = models.BooleanField(default=True,null=True,blank=True)
 
     objects = CustomerManager()
 
