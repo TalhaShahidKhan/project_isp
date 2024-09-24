@@ -1,4 +1,5 @@
 from typing import Any
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.db.models.query import QuerySet
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -19,7 +20,7 @@ from django.contrib import messages
 
 class CustomerListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     model = Customer
-    
+    group_required = "Basic"
     template_name = "customer/customer_list.html"
     context_object_name = "cmrs"
 
@@ -31,7 +32,7 @@ class CustomerListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
 class CustomerCreateView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     template_name = "customer/customer_create.html"
     model = Customer
-    
+    group_required = "Basic"
     form_class = CustomerCreateFrom
     success_url = reverse_lazy("customer:cmr_list")
 
@@ -55,7 +56,7 @@ class CustomerCreateView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
 
 class CustomerUpdateView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     model = Customer
-    
+    group_required = "Basic"
     form_class = CustomerCreateFrom
     template_name = "customer/customer_update.html"
     success_url = reverse_lazy("customer:cmr_list")
@@ -72,20 +73,21 @@ class CustomerUpdateView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
 
 class CustomerDetailsView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
     template_name = "customer/customer_details.html"
-    
+    group_required = "Basic"
     model = Customer
     context_object_name = "cmr"
 
 
 class CustomerDeleteView(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
     model = Customer
-    
+    group_required = "Basic"
     success_url = reverse_lazy("customer:cmr_list")
 
 
 class CustomerEnableView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     model = Customer
     form_class = CustomerStatusForm
+    group_required = "Basic"
 
     def get_success_url(self):
         # Assuming you want to redirect to the detail view of the updated object
@@ -99,6 +101,7 @@ class CustomerEnableView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
 class CustomerDisableView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     model = Customer
     form_class = CustomerStatusForm
+    group_required = "Basic"
 
     def get_success_url(self):
         # Assuming you want to redirect to the detail view of the updated object
@@ -111,7 +114,7 @@ class CustomerDisableView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
 
 class AddPackage(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     model = Package
-    
+    group_required = "Basic"
     form_class = PackageForm
     success_url = reverse_lazy("customer:pkg_list")
     template_name = "package/add_package.html"
@@ -123,7 +126,7 @@ class AddPackage(LoginRequiredMixin, GroupRequiredMixin, CreateView):
 
 class ListPackage(LoginRequiredMixin, GroupRequiredMixin, ListView):
     model = Package
-    
+    group_required = "Basic"
     template_name = "package/package_list.html"
     context_object_name = "pkgs"
 
@@ -134,7 +137,7 @@ class ListPackage(LoginRequiredMixin, GroupRequiredMixin, ListView):
 
 class PackageDetailsView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
     model = Package
-    
+    group_required = "Basic"
     template_name = "package/package_details.html"
     context_object_name = "pkg"
 
@@ -142,7 +145,7 @@ class PackageDetailsView(LoginRequiredMixin, GroupRequiredMixin, DetailView):
 class PackageUpdateView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     template_name = "package/package_update.html"
     model = Package
-    
+    group_required = "Basic"
     form_class = PackageForm
     context_object_name = "pkg"
     success_url = reverse_lazy("customer:pkg_list")
@@ -150,7 +153,7 @@ class PackageUpdateView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
 
 class PackageDeleteView(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
     model = Package
-    
+    group_required = "Basic"
     success_url = reverse_lazy("customer:pkg_list")
 
 
@@ -159,6 +162,7 @@ class AreaAddView(LoginRequiredMixin, GroupRequiredMixin, CreateView):
     template_name = "area/add_area.html"
     form_class = AreaForm
     success_url = reverse_lazy("customer:ar_list")
+    group_required = "Basic"
 
     def form_valid(self, form):
         form.instance.area_admin = self.request.user
@@ -169,6 +173,7 @@ class AreaListView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     model = Area
     context_object_name = "areas"
     template_name = "area/list_area.html"
+    group_required = "Basic"
 
     def get_queryset(self) -> QuerySet[Any]:
         area = Area.objects.filter(area_admin=self.request.user)
@@ -179,10 +184,24 @@ class AreaUpdateView(LoginRequiredMixin, GroupRequiredMixin, UpdateView):
     context_object_name = "area"
     template_name = "area/update_area.html"
     form_class = AreaForm
+    group_required = "Basic"
     model = Area
     success_url = reverse_lazy("customer:ar_list")
 
 
 class AreaDeleteView(LoginRequiredMixin, GroupRequiredMixin, DeleteView):
     model = Area
+    group_required = "Basic"
     success_url = reverse_lazy("customer:ar_list")
+
+
+
+def search_customer(request):
+    if request.method == 'POST':
+        customer = request.POST.get('cname')
+        if customer:
+            result = Customer.objects.filter(name__icontains=customer)
+            return render(request,"extra/search_c.html",context={"cmrs":result})
+    return render(request,"extra/search_c.html")      
+
+    

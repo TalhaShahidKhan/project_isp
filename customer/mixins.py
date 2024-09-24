@@ -17,7 +17,7 @@ class GroupRequiredMixin(UserPassesTestMixin):
 
         # If one group is required
         if isinstance(self.group_required, str):
-            return self.request.user.groups.filter(name=self.group_required).exists()
+            return self.request.user.groups.filter(name__icontains=self.group_required).exists()
 
         # If multiple groups are required, allow if the user is in any of them
         if isinstance(self.group_required, list):

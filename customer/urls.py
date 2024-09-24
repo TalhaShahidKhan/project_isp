@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CustomerListView,CustomerCreateView,CustomerUpdateView,CustomerDetailsView,CustomerDeleteView,CustomerDisableView,CustomerEnableView,AddPackage,ListPackage,PackageDetailsView,PackageUpdateView,PackageDeleteView,AreaAddView,AreaDeleteView,AreaListView,AreaUpdateView
+from .views import CustomerListView,CustomerCreateView,CustomerUpdateView,CustomerDetailsView,CustomerDeleteView,CustomerDisableView,CustomerEnableView,AddPackage,ListPackage,PackageDetailsView,PackageUpdateView,PackageDeleteView,AreaAddView,AreaDeleteView,AreaListView,AreaUpdateView,search_customer
 urlpatterns = [
     path('customer/',CustomerListView.as_view(),name="cmr_list"),
     path('customer/add/',CustomerCreateView.as_view(),name="cmr_add"),
@@ -8,6 +8,7 @@ urlpatterns = [
     path('customer/delete/<int:pk>/',CustomerDeleteView.as_view(),name="cmr_del"),
     path('customer/enable/<int:pk>/',CustomerEnableView.as_view(),name="cmr_enb"),
     path('customer/disable/<int:pk>/',CustomerDisableView.as_view(),name="cmr_dis"),
+    path('customer/search/',search_customer,name="cmr_srch"),
 
 
 

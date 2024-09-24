@@ -2,12 +2,12 @@
 {% block title  %}Update Profile {{user.first_name}} {{user.last_name}}{% endblock title  %}
 {% block body %}
 
-<form method="post">
-    {% csrf_token %}
-    {{form.as_p}}
-    <button type="submit">Update</button>
-</form>
+    <form method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit">Update</button>
+    </form>
 
-<a href="{% url "account_email" %}">Change Email</a>
-<a href="{% url "home:profile" request.user.username %}">Go Back</a>
+    <a href="{% url "account_email" %}">Change Email</a>
+    <a href="{% url "home:profile" request.user.username %}">Go Back</a>
 {% endblock body %}

@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "home.apps.HomeConfig",
     "customer.apps.CustomerConfig",
     "subscription.apps.SubscriptionConfig",
+    "payment.apps.PaymentConfig",
 ]
 
 MIDDLEWARE = [

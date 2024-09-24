@@ -24,6 +24,7 @@ urlpatterns = [
     path('utils/', include('customer.urls',namespace="customer")),
     path('user_subs/', include('subscription.urls',namespace="subs")),
     path('accounts/', include('allauth.urls')),
+    path('pay/', include('payment.urls')),
 
 ]
 
