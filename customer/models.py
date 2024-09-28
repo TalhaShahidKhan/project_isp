@@ -45,7 +45,7 @@ class Customer(models.Model):
         (ONE_MONTH,'1 Month'),
         (TENTH_OF_NEXT,'10th of next'),
     ]
-    customer_id = models.CharField(max_length=10,unique=True)
+    customer_id = models.CharField(max_length=10,null=True,blank=True)
     name = models.CharField(max_length=110)
     phone_number = models.CharField(max_length=11,blank=False,null=False)
     admin = models.ForeignKey(User,related_name="customers",on_delete=models.CASCADE)

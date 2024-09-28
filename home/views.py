@@ -31,7 +31,7 @@ class UserProfileView(LoginRequiredMixin, DetailView):
 
 class UpdateProfileView(LoginRequiredMixin, UpdateView):
     model = User
-    fields = ["first_name", "last_name"]
+    fields = ["first_name","bkash_number", "last_name","mikrotik_host", "mikrotik_username", "mikrotik_password", "mikrotik_port", "mikrotik_use_ssl", "mikrotik_verify_ssl", "mikrotik_ssl_verify_hostname"]
     slug_field = "username"
     template_name = "home/update_profile.html"
 
@@ -41,7 +41,7 @@ class UpdateProfileView(LoginRequiredMixin, UpdateView):
 
 class AddMikrotikView(LoginRequiredMixin, UpdateView):
     model = User
-    fields = ["mikrotik_host", "mikrotik_username", "mikrotik_password", "mikrotik_port", "mikrotik_use_ssl", "mikrotik_verify_ssl", "mikrotik_host_verify_ssl"]
+    fields = ["mikrotik_host", "mikrotik_username", "mikrotik_password", "mikrotik_port", "mikrotik_use_ssl", "mikrotik_verify_ssl", "mikrotik_ssl_verify_hostname"]
     slug_field = "username"
     template_name = "home/add_mikrotik.html"
     def get_success_url(self) -> str:

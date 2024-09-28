@@ -1,12 +1,22 @@
-{% extends "base.html" %}
-{% block title %} Customer Create {% endblock title %}
-
-{% block body %}
-
-    <form method="post">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit">Add Customer</button>
-    </form>
-
-{% endblock body %}
+{% extends "account/signup.html" %}
+{% load i18n %}
+{% load allauth_ui %}
+{% load widget_tweaks %}
+{% block content %}
+    {% trans "Add Customer" as heading %}
+    {% #container heading=heading subheading=subheading  %}
+    
+        {% if not SOCIALACCOUNT_ONLY %}
+            {% url 'customer:cmr_add' as action_url %}
+            {% #form form=form url=action_url button_text=heading %}
+                {{ redirect_field }}
+                {% csrf_token %}
+                <a href="{% url "customer:cmr_list" %}" class="text-white text-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Go Back</a>
+                {% /form %}
+        {% endif %}
+        
+        {% if SOCIALACCOUNT_ENABLED %}
+            {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
+        {% endif %}
+    {% /container %}
+{% endblock %}

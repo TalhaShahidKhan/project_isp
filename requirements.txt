@@ -3,6 +3,8 @@ asgiref==3.8.1
 billiard==4.2.0
 celery==5.4.0
 celery-redbeat==2.2.0
+certifi==2024.8.30
+charset-normalizer==3.3.2
 click==8.1.7
 click-didyoumean==0.3.1
 click-plugins==1.1.1
@@ -17,6 +19,7 @@ django-timezone-field==7.0
 django-widget-tweaks==1.5.0
 djhtml==3.0.6
 gunicorn==23.0.0
+idna==3.10
 kombu==5.4.1
 packaging==24.1
 prompt_toolkit==3.0.47
@@ -25,6 +28,7 @@ python-dateutil==2.9.0.post0
 python-decouple==3.8
 PyYAML==6.0.2
 redis==5.0.8
+requests==2.32.3
 RouterOS-api==0.18.1
 six==1.16.0
 slippers==0.6.2
@@ -33,5 +37,6 @@ tenacity==9.0.0
 typeguard==2.13.3
 typing_extensions==4.12.2
 tzdata==2024.1
+urllib3==2.2.3
 vine==5.1.0
 wcwidth==0.2.13

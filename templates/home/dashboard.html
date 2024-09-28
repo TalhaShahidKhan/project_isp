@@ -1,33 +1,159 @@
 {% extends "base.html" %}
 {% block title %}Dashboard | ISP Management System{% endblock title %}
 {% block body %}
+  <section class="flex items-center bg-blue-200 dark:bg-gray-900">
+    <div class="w-full max-w-screen-xl mx-auto ">
+        <!-- Start coding here -->
+      <div class="relative overflow-hidden bg-blue-200 shadow-md dark:bg-gray-800 sm:rounded-lg">
+        <div class="flex flex-row items-center justify-center p-4 space-y-3 sm:flex sm:space-y-0 sm:space-x-4">
+          <div class="flex gap-4 items-center justify-center py-3 px-2 mx-1 w-1/4 text-center font-semibold  text-gray-900 dark:text-white rounded-xl">
+            <svg class=" w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4h-4Z" clip-rule="evenodd"/>
+            </svg>
+            <span>{{request.user.first_name}} {{request.user.last_name}}</span>
+          </div>
+          <div class="flex items-center justify-center gap-4 py-3 px-2 mx-1 w-1/4 text-center font-semibold  text-gray-900 dark:text-white rounded-xl">
+            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M2.038 5.61A2.01 2.01 0 0 0 2 6v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6c0-.12-.01-.238-.03-.352l-.866.65-7.89 6.032a2 2 0 0 1-2.429 0L2.884 6.288l-.846-.677Z"/>
+              <path d="M20.677 4.117A1.996 1.996 0 0 0 20 4H4c-.225 0-.44.037-.642.105l.758.607L12 10.742 19.9 4.7l.777-.583Z"/>
+            </svg>
+            <span>{{request.user.email}}</span>
+          </div>
+          {% if request.user.subscription %}
+            <div class="flex items-center justify-center gap-4 py-3 px-2 mx-1 w-1/4 text-center font-semibold  text-gray-900 dark:text-white rounded-xl">
+              <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 17.345a4.76 4.76 0 0 0 2.558 1.618c2.274.589 4.512-.446 4.999-2.31.487-1.866-1.273-3.9-3.546-4.49-2.273-.59-4.034-2.623-3.547-4.488.486-1.865 2.724-2.899 4.998-2.31.982.236 1.87.793 2.538 1.592m-3.879 12.171V21m0-18v2.2"/>
+              </svg>
+              <span>{{request.user.subscription.plan.name}} Plan</span>
+            </div>
+          {% else %}
+            <div class="py-3 px-2 mx-1 w-1/4 text-center font-semibold  text-gray-900 dark:text-white rounded-xl">No Plan Activated</div>
+          {% endif %}
+          <a href="{% url "home:profile" request.user.username %}" class="flex items-center justify-center gap-4 py-3 px-2 mx-1 w-1/4 text-center font-semibold hover:bg-blue-300 dark:hover:bg-gray-900 text-gray-900 dark:text-white rounded-xl">
+            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" d="M4 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H4Zm10 5a1 1 0 0 1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1Zm-8-5a3 3 0 1 1 6 0 3 3 0 0 1-6 0Zm1.942 4a3 3 0 0 0-2.847 2.051l-.044.133-.004.012c-.042.126-.055.167-.042.195.006.013.02.023.038.039.032.025.08.064.146.155A1 1 0 0 0 6 17h6a1 1 0 0 0 .811-.415.713.713 0 0 1 .146-.155c.019-.016.031-.026.038-.04.014-.027 0-.068-.042-.194l-.004-.012-.044-.133A3 3 0 0 0 10.059 14H7.942Z" clip-rule="evenodd"/>
+            </svg>
+            <span>Explore Profile</span>
+          </a>
+          {% if not request.user.subscription %}
+            <a href="{% url "subs:add_sub" %}" class="py-3 px-2 mx-1 w-1/4 text-center font-semibold hover:bg-blue-300 dark:hover:bg-gray-900 text-gray-900 dark:text-white rounded-xl">Subscribe</a>
+          {% else %}
+            <a href="{% url "subs:upd_sub" request.user.subscription.id %}" class="flex items-center justify-center gap-4 py-3 px-2 mx-1 w-1/4 text-center font-semibold hover:bg-blue-300 dark:hover:bg-gray-900 text-gray-900 dark:text-white rounded-xl">
+              <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m16 17-4-4-4 4m8-6-4-4-4 4"/>
+              </svg>
+              <span>Update Plan</span>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <p>Dashboard</p>
-    <div class = "flex flex-col items-center justify-center">
-        <h1>{{request.user.username}}</h1>
-        <h1>{{request.user.email}}</h1>
-        <a href="{% url "account_change_password" %}">Password Change</a>
-        <a href="{% url "account_logout" %}">Logout</a>
-        <a href="{% url "customer:cmr_list" %}">Customers</a>
-        <a href="{% url "customer:pkg_list" %}">Packages</a>
-        <a href="{% url "customer:ar_list" %}">Areas</a>
-        <a href="{% url "subs:plans" %}">Explore Plans</a>
-        <a href="{% url "home:profile" request.user.username %}">User Profile</a>
 
 
-        <div class="text-xl font-semibold text-center my-2 flex items-center justify-center gap-4">
-            <h1>Plan</h1>
-            {% if request.user.subscription.plan %}
-                <h3> {{request.user.subscription.plan}}</h3>
-            {% else %}
-                <h3>No Plan Activated</h3>
-            {% endif %}
+  <section class="bg-blue-200  dark:bg-gray-900 antialiased">
+    <div class="max-w-screen-xl px-4 py-8 mx-auto lg:px-6 sm:py-16 lg:py-24">
+      <div class="max-w-2xl mx-auto text-center">
+        <h2 class="text-3xl font-extrabold leading-tight tracking-tight text-gray-900 sm:text-4xl dark:text-white">
+          Management tools
+        </h2>
+        <p class="mt-4 text-base font-normal text-gray-500 sm:text-xl dark:text-gray-400">
+          Manage your customers form here
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 mt-12 text-center sm:mt-16 gap-x-20 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="space-y-4">
+
+          <h3 class="text-2xl font-bold leading-tight text-gray-900 dark:text-white">
+            Add Packages
+          </h3>
+          <p class="text-lg font-normal text-gray-500 dark:text-gray-400">
+            First, you have to add the necessary Packages for the customers.
+          </p>
+          <a href="{% url "customer:pkg_list" %}" title=""
+             class="text-white bg-blue-700 justify-center hover:bg-blue-800 inline-flex items-center  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+             role="button">
+            Package Management
+            <svg aria-hidden="true" class="w-5 h-5 ml-2 -mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                 fill="currentColor">
+              <path fill-rule="evenodd"
+                    d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+                    clip-rule="evenodd" />
+            </svg>
+          </a>
         </div>
 
-        {% if request.user.subscription.is_active %}
-            <a href="{% url "subs:upd_sub" request.user.subscription.id%}">Update Plan</a>
-        {% else %}
-            <a href="{% url "subs:plans" %}">Subscription</a>
-        {% endif %}
+        <div class="space-y-4">
+
+          <h3 class="text-2xl font-bold leading-tight text-gray-900 dark:text-white">
+            Add Area
+          </h3>
+          <p class="text-lg font-normal text-gray-500 dark:text-gray-400">
+            Add area to manage customers for specific area.
+          </p>
+          <a href="{% url "customer:ar_list" %}" title=""
+             class="text-white bg-blue-700 justify-center hover:bg-blue-800 inline-flex items-center  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+             role="button">
+            Area Management
+            <svg aria-hidden="true" class="w-5 h-5 ml-2 -mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                 fill="currentColor">
+              <path fill-rule="evenodd"
+                    d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+                    clip-rule="evenodd" />
+            </svg>
+          </a>
+        </div>
+
+        <div class="space-y-4">
+
+          <h3 class="text-2xl font-bold leading-tight text-gray-900 dark:text-white">
+            Manage Customer
+          </h3>
+          <p class="text-lg font-normal text-gray-500 dark:text-gray-400">
+            Manage Your Customer Details and apply mikrotik Management.
+          </p>
+          <a href="{% url "customer:cmr_list" %}" title=""
+             class="text-white bg-blue-700 justify-center hover:bg-blue-800 inline-flex items-center  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+             role="button">
+            Customer Management
+            <svg aria-hidden="true" class="w-5 h-5 ml-2 -mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                 fill="currentColor">
+              <path fill-rule="evenodd"
+                    d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+                    clip-rule="evenodd" />
+            </svg>
+          </a>
+        </div>
+      </div>
     </div>
+  </section>
+
+
+
+
 {% endblock body %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

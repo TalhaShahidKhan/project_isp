@@ -7,6 +7,13 @@ class CustomerCreateFrom(ModelForm):
     class Meta:
         model = Customer
         fields = ["customer_id","name","area","package","duration","phone_number","active"]
+    def __init__(self, *args, **kwargs):
+        admin = kwargs.pop('admin',None)  # Get the logged-in admin
+        super(CustomerCreateFrom,self).__init__(*args, **kwargs)
+        if admin:
+            # Filter the area and package fields based on the admin
+            self.fields['area'].queryset = Area.objects.filter(area_admin=admin)
+            self.fields['package'].queryset = Package.objects.filter(pkg_admin=admin)
 
 
 class CustomerStatusForm(ModelForm):

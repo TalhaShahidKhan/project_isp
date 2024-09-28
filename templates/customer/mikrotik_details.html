@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Mikrotik User List{% endblock title %}
+{% block body %}
+
+
+
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <table class="w-full text-sm text-left rtl:text-right text-blue-100 dark:text-blue-100">
+            <thead class="text-xs text-white uppercase bg-blue-600 dark:text-white">
+                <tr>
+                    <th scope="col" class="px-6 py-3">
+                        ID
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Customer Name
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Service
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Address
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        CallerID
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Session ID
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Limit Bytes In
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Limit Bytes Out
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Uptime
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Radius
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cmr in customers %}
+
+                    <tr class="bg-blue-500 border-b border-blue-400">
+                        <th scope="row" class="px-6 py-4 font-medium text-blue-50 whitespace-nowrap dark:text-blue-100">
+                            {{cmr.id}}
+                        </th>
+                        <td class="px-6 py-4">
+                            {{cmr.name}}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{cmr.service}}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{cmr.address}}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{cmr.caller_id}}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{cmr.session_id}}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{cmr.limit_bytes_in}}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{cmr.limit_bytes_out}}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{cmr.uptime}}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{cmr.radius}}
+                        </td>
+                    </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+{% endblock body %}
+
+
