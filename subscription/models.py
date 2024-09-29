@@ -1,4 +1,6 @@
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group,Permission
+from django.contrib.contenttypes.models import ContentType
+from customer.models import Customer,Area,Package
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.db import models
@@ -24,6 +26,15 @@ class SubscriptionPlan(models.Model):
         # Create a group automatically if it doesn't exist
         if not self.group:
             group, created = Group.objects.get_or_create(name=self.name)
+            customer_ct = ContentType.objects.get_for_model(Customer)
+            area_ct = ContentType.objects.get_for_model(Area)
+            package_ct = ContentType.objects.get_for_model(Package)
+            customer_permissions = Permission.objects.filter(content_type=customer_ct)
+            area_permissions = Permission.objects.filter(content_type=area_ct)
+            package_permissions = Permission.objects.filter(content_type=package_ct)
+            group.permissions.set(customer_permissions)
+            group.permissions.set(area_permissions)
+            group.permissions.set(package_permissions)
             self.group = group
 
         super().save(*args, **kwargs)
@@ -44,15 +55,11 @@ class Subscription(models.Model):
     def deactivate_expired_subscriptions(model):
         expired_subscriptions = model.objects.filter(end_date__lt=timezone.now(), is_active=True)
         for subscription in expired_subscriptions:
-            subscription.is_active = False
-            subscription.save()
+            subscription.delete()
 
     @staticmethod
     def assign_plan_permissions(user, plan):
-        # Remove user from previous group (if any)
         user.groups.clear()
-
-        # Assign the user to the new group based on their plan
         group = plan.group
         user.groups.add(group)
     

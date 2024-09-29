@@ -1,11 +1,19 @@
-{% extends "base.html" %}
-{% block title %}Subscription{% endblock title %}
-{% block body %}
-
-    <form method="post">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit">Subscribe</button>
-    </form>
-
-{% endblock body %}
+{% extends "account/signup.html" %}
+{% load i18n %}
+{% load allauth_ui %}
+{% load widget_tweaks %}
+{% block content %}
+    {% trans "Subscribe" as heading %}
+    {% #container heading=heading subheading=subheading  %}
+        {% if not SOCIALACCOUNT_ONLY %}
+            {% url 'subs:add_sub' as action_url %}
+            {% #form form=form url=action_url button_text=heading %}
+                {{ redirect_field }}
+                {% csrf_token %}
+            {% /form %}
+        {% endif %}
+        {% if SOCIALACCOUNT_ENABLED %}
+            {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
+        {% endif %}
+    {% /container %}
+{% endblock %}
