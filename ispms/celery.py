@@ -1,6 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 import os
 from celery import Celery
+from celery.schedules import crontab
 
 # Set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ispms.settings')
@@ -13,7 +14,11 @@ app = Celery('ispms')
 app.conf.beat_schedule = {
     'subs_check': {
         'task': 'subscription.tasks.check_active',
-        'schedule': 30,
+        'schedule': crontab(minute=0, hour=0),
+    },
+    'cus_chec': {
+        'task': 'customer.tasks.customer_active',
+        'schedule': crontab(minute=0, hour=0),
     },
 }
 
