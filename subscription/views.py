@@ -8,7 +8,8 @@ from django.urls import reverse_lazy
 from payment.bkash_utils import create_token,create_payment,exec_payment
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
-
+from payment.models import UserPayment
+from datetime import datetime
 
 
 
@@ -22,13 +23,14 @@ class CreateSubscriptionView(LoginRequiredMixin, NoActiveSubscriptionMixin, View
         try:
             get_token = create_token()
             token = get_token["id_token"]
-            # print(token)
+
+            print(token)
             form = SubscriptionCreateForm(request.POST)
             if form.is_valid():
                 price = form.instance.plan.price
                 number = self.request.user.bkash_number
                 payment = create_payment(token=str(token),amount=str(price),payer_reference=str(number),minumber="01611663361")
-                # print(payment)
+                print(payment)
                 if payment['agreementStatus'] == 'Initiated':
                     form.instance.user = self.request.user
                     user = form.instance.user
@@ -37,7 +39,8 @@ class CreateSubscriptionView(LoginRequiredMixin, NoActiveSubscriptionMixin, View
                     Subscription.assign_plan_permissions(user,plan)
                     return redirect(payment['bkashURL'])
         except Exception as e:
-            form.add_error('plan',f"There is an error in API. Please contact developer. {e}")
+            print(e)
+            # form.add_error('plan',f"There is an error in API. Please contact developer. {e}")
             return redirect("subs:plans")
         
 
@@ -53,7 +56,7 @@ class UpdatePlan(LoginRequiredMixin, View):
     def post(self, request,pk):
         sub = Subscription.objects.filter(user=request.user,is_active=True)
         if sub:
-            messages.warning(request,"You have already a subsciption activated. Please wait until it overs.")
+            messages.warning(request,"You have already a subscription activated. Please wait until it overs.")
             return redirect("subs:plans")
         try:
             get_token = create_token()
@@ -107,12 +110,15 @@ def bkash_callback_user(request):
         get_token = create_token()
         token = get_token["id_token"]
         exe_payment = exec_payment(token,paymentId=payment_id)
-        if exe_payment.get('transactionStatus') == 'Completed' :
-            messages.success(request,"Payment Successfull")
+        date_string=exe_payment('agreementExecuteTime')
+        date_string = date_string.replace(" GMT", "")
+        if exe_payment.get('agreementStatus') == 'Completed' :
+            spayment=UserPayment.objects.create(user=request.user,payer_reference=exe_payment.get('payerReference'),payment_id=exe_payment.get('paymentID'),trxID=request.POST.get('trxID'),amount=request.POST.get('amount'),payment_exec_time=date_string)
+            messages.success(request,"Payment Successful")
             return redirect("subs:plans")
         sub = Subscription.objects.filter(user=request.user,is_active=True)
         sub.delete()
-        messages.success(request,"Payment Failed. Please contact Developer")
+        messages.error(request,"Payment Failed. Please contact Developer")
         return redirect("subs:plans")
     except Exception as e:
         sub = Subscription.objects.filter(user=request.user,is_active=True)

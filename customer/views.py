@@ -13,15 +13,15 @@ from django.views.generic import (
     UpdateView,
 )
 from django.contrib import messages
-
-from .mikrotik import get_all_customers
-import routeros_api
+from .mixins import SubscriptionRequiredMixin
+from routeros_api import RouterOsApiPool
+from .mikrotik import get_all_users_from_mikrotik
 
 
 # Create your views here.
 
 
-class CustomerListView(LoginRequiredMixin, ListView):
+class CustomerListView(LoginRequiredMixin,SubscriptionRequiredMixin, ListView):
     model = Customer
     template_name = "customer/customer_list.html"
     context_object_name = "cmrs"
@@ -31,25 +31,30 @@ class CustomerListView(LoginRequiredMixin, ListView):
         return customer
 
 
-class CustomerCreateView(LoginRequiredMixin, CreateView):
+class CustomerCreateView(LoginRequiredMixin,SubscriptionRequiredMixin, CreateView):
     template_name = "customer/customer_create.html"
     model = Customer
     form_class = CustomerCreateFrom
     success_url = reverse_lazy("customer:cmr_list")
 
+
     def form_valid(self, form):
-        user = self.request.user
-        form.instance.admin = user
-        if user.customers.count() >= user.subscription.plan.customer_limit:
-            form.add_error(
-                None,
-                f"You have reached your limit of {user.subscription.plan.customer_limit} customers.",
-            )
-            return self.form_invalid(form)
-        messages.success(self.request, "Customer added successfully.")
-        self.object = form.save()
-        self.object.set_expairy()
-        return super().form_valid(form)
+        try:
+            user = self.request.user
+            form.instance.admin = user
+            if user.customers.count() >= user.subscription.plan.customer_limit:
+                form.add_error(
+                    None,
+                    f"You have reached your limit of {user.subscription.plan.customer_limit} customers.",
+                )
+                return self.form_invalid(form)
+            messages.success(self.request, "Customer added successfully.")
+            instance = self.object
+            instance.add_to_mik()
+            return super().form_valid(form)
+        except Exception as e:
+            messages.error(self.request,"There is an error in API. Please Try again letter or contact Developer.")
+            return redirect("customer:cmr_list")
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -57,7 +62,7 @@ class CustomerCreateView(LoginRequiredMixin, CreateView):
         return kwargs
 
 
-class CustomerUpdateView(LoginRequiredMixin, UpdateView):
+class CustomerUpdateView(LoginRequiredMixin,SubscriptionRequiredMixin, UpdateView):
     model = Customer
     form_class = CustomerCreateFrom
     template_name = "customer/customer_update.html"
@@ -74,21 +79,30 @@ class CustomerUpdateView(LoginRequiredMixin, UpdateView):
             self.object.enable_internet()
         elif form.instance.active == False:
             self.object.disable_internet()
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        instance = self.object
+        instance.update_in_mik()
+        return response
 
 
-class CustomerDetailsView(LoginRequiredMixin, DetailView):
+class CustomerDetailsView(LoginRequiredMixin,SubscriptionRequiredMixin, DetailView):
     template_name = "customer/customer_details.html"
     model = Customer
     context_object_name = "cmr"
 
 
-class CustomerDeleteView(LoginRequiredMixin, DeleteView):
+class CustomerDeleteView(LoginRequiredMixin,SubscriptionRequiredMixin, DeleteView):
     model = Customer
     success_url = reverse_lazy("customer:cmr_list")
 
+    def form_valid(self, form):
+        instance = self.object
+        instance.remove_from_mik()
+        return super().form_valid(form)
+    
 
-class CustomerEnableView(LoginRequiredMixin, UpdateView):
+
+class CustomerEnableView(LoginRequiredMixin,SubscriptionRequiredMixin, UpdateView):
     model = Customer
     form_class = CustomerStatusForm
 
@@ -101,7 +115,7 @@ class CustomerEnableView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class CustomerDisableView(LoginRequiredMixin, UpdateView):
+class CustomerDisableView(LoginRequiredMixin,SubscriptionRequiredMixin, UpdateView):
     model = Customer
     form_class = CustomerStatusForm
 
@@ -114,7 +128,7 @@ class CustomerDisableView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class AddPackage(LoginRequiredMixin, CreateView):
+class AddPackage(LoginRequiredMixin,SubscriptionRequiredMixin, CreateView):
     model = Package
     form_class = PackageForm
     success_url = reverse_lazy("customer:pkg_list")
@@ -125,7 +139,7 @@ class AddPackage(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class ListPackage(LoginRequiredMixin, ListView):
+class ListPackage(LoginRequiredMixin,SubscriptionRequiredMixin, ListView):
     model = Package
     template_name = "package/package_list.html"
     context_object_name = "pkgs"
@@ -135,13 +149,13 @@ class ListPackage(LoginRequiredMixin, ListView):
         return package
 
 
-class PackageDetailsView(LoginRequiredMixin, DetailView):
+class PackageDetailsView(LoginRequiredMixin,SubscriptionRequiredMixin, DetailView):
     model = Package
     template_name = "package/package_details.html"
     context_object_name = "pkg"
 
 
-class PackageUpdateView(LoginRequiredMixin, UpdateView):
+class PackageUpdateView(LoginRequiredMixin,SubscriptionRequiredMixin, UpdateView):
     template_name = "package/package_update.html"
     model = Package
     form_class = PackageForm
@@ -149,12 +163,12 @@ class PackageUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy("customer:pkg_list")
 
 
-class PackageDeleteView(LoginRequiredMixin, DeleteView):
+class PackageDeleteView(LoginRequiredMixin,SubscriptionRequiredMixin, DeleteView):
     model = Package
     success_url = reverse_lazy("customer:pkg_list")
 
 
-class AreaAddView(LoginRequiredMixin, CreateView):
+class AreaAddView(LoginRequiredMixin,SubscriptionRequiredMixin, CreateView):
     model = Area
     template_name = "area/add_area.html"
     form_class = AreaForm
@@ -165,7 +179,7 @@ class AreaAddView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class AreaListView(LoginRequiredMixin, ListView):
+class AreaListView(LoginRequiredMixin,SubscriptionRequiredMixin, ListView):
     model = Area
     context_object_name = "areas"
     template_name = "area/list_area.html"
@@ -175,7 +189,7 @@ class AreaListView(LoginRequiredMixin, ListView):
         return area
 
 
-class AreaUpdateView(LoginRequiredMixin, UpdateView):
+class AreaUpdateView(LoginRequiredMixin,SubscriptionRequiredMixin, UpdateView):
     context_object_name = "area"
     template_name = "area/update_area.html"
     form_class = AreaForm
@@ -183,7 +197,7 @@ class AreaUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy("customer:ar_list")
 
 
-class AreaDeleteView(LoginRequiredMixin, DeleteView):
+class AreaDeleteView(LoginRequiredMixin,SubscriptionRequiredMixin, DeleteView):
     model = Area
     success_url = reverse_lazy("customer:ar_list")
 
@@ -199,36 +213,25 @@ def search_customer(request):
     return render(request, "extra/search_c.html")
 
 
-def mikrotik_list_users(request):
-    ppp_route = "/ppp/active"
+
+def mikrotik_users_list(request):
     try:
-        api = routeros_api.connect(
-            host=request.user.mikrotik_host,
-            port=request.user.mikrotik_port,
-            username=request.user.mikrotik_username,
-            password=request.user.mikrotik_password,
-            plaintext_login=True,
-            use_ssl=request.user.mikrotik_use_ssl,
-            ssl_verify=request.user.mikrotik_verify_ssl,
-            ssl_verify_hostname=request.user.mikrotik_ssl_verify_hostname,
-        )
-        resource = api.get_resource(ppp_route)
-        customers = []
-        for i in get_all_customers(resource=resource):
-            i["caller_id"] = i["caller-id"]
-            i["limit_bytes_in"] = i["limit-bytes-in"]
-            i["limit_bytes_out"] = i["limit-bytes-out"]
-            i["session_id"] = i["session-id"]
-            del i["caller-id"]
-            del i["limit-bytes-in"]
-            del i["limit-bytes-out"]
-            del i["session-id"]
-            customers.append(i)
-        context = {"customers": customers}
-        return render(request, "customer/mikrotik_details.html", context=context)
+        conn = RouterOsApiPool(host=request.user.mikrotik_host,username=request.user.mikrotik_username,password=request.user.mikrotik_password,port=request.user.mikrotik_port,use_ssl=request.user.mikrotik_use_ssl,ssl_verify=request.user.mikrotik_verify_ssl,ssl_verify_hostname=request.user.mikrotik_ssl_verify_hostname,plaintext_login=True)
+        users = get_all_users_from_mikrotik(conn=conn)
+        customer = []
+        print(users)
+        for usr in users:
+            usr['last_logged_out'] = usr['last-logged-out']
+            usr['limit_bytes_in'] = usr['limit-bytes-in']
+            usr['limit_bytes_out'] = usr['limit-bytes-out']
+            del usr['last-logged-out']
+            del usr['limit-bytes-in']
+            del usr['limit-bytes-out']
+            customer.append(usr)
+        context = {
+            "customers": customer
+        }
+        return render(request,'customer/mikrotik_details.html',context=context)
     except Exception as e:
-        messages.error(
-            request,
-            "There is a problem with mikrotik server. Please Check your mikrotik details first.",
-        )
-        return redirect("customer:cmr_list")
+        messages.error(request,f'There are problem with api. Please Check your Mikrotik Details. ERROR:{e}')
+        return redirect('customer:cmr_list')

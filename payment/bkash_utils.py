@@ -1,7 +1,6 @@
 import requests
 from decouple import config
 
-base_url = "https://tokenized.sandbox.bka.sh/v1.2.0-beta/"
 
 BKASH_APP_KEY = config("BKASH_APP_KEY", cast=str)
 BKASH_APP_SECRET = config("BKASH_APP_SECRET", cast=str)
@@ -10,7 +9,7 @@ BKASH_PASSWORD = config("BKASH_PASSWORD", cast=str)
 
 
 def create_token():
-    url = f"{base_url}tokenized/checkout/token/grant"
+    url = "https://tokenized.pay.bka.sh/v1.2.0-beta/tokenized/checkout/token/grant"
     headers = {
         "accept": "application/json",
         "content-type": "application/json",
@@ -33,7 +32,8 @@ def create_payment(
     payer_reference,
     minumber,
 ):
-    url = f"{base_url}tokenized/checkout/create"
+    url = "https://tokenized.pay.bka.sh/v1.2.0-beta/tokenized/checkout/create"
+
     headers = {
         "accept": "application/json",
         "content-type": "application/json",
@@ -56,7 +56,7 @@ def create_payment(
 
 
 def exec_payment(paymentId, token):
-    url = f"{base_url}tokenized/checkout/execute"
+    url = "https://tokenized.pay.bka.sh/v1.2.0-beta/tokenized/checkout/execute"
     headers = {
         "accept": "application/json",
         "content-type": "application/json",

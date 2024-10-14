@@ -48,7 +48,7 @@ class Subscription(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='subscription')
     plan = models.ForeignKey(SubscriptionPlan, on_delete=models.CASCADE)
     start_date = models.DateTimeField(auto_now_add=True)
-    end_date = models.DateTimeField()
+    end_date = models.DateTimeField(blank=True,null=True)
     is_active = models.BooleanField(default=True)
 
     @staticmethod
@@ -66,7 +66,7 @@ class Subscription(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.end_date:
-            self.end_date = timezone.now() + timedelta(minutes=self.plan.duration)
+            self.end_date = timezone.now() + timedelta(days=self.plan.duration)
         super().save(*args, **kwargs)
 
     def __str__(self):

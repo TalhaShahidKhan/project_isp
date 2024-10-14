@@ -1,8 +1,8 @@
 from django.urls import path
-from .views import CustomerListView,CustomerCreateView,CustomerUpdateView,CustomerDetailsView,CustomerDeleteView,CustomerDisableView,CustomerEnableView,AddPackage,ListPackage,PackageDetailsView,PackageUpdateView,PackageDeleteView,AreaAddView,AreaDeleteView,AreaListView,AreaUpdateView,search_customer,mikrotik_list_users
+from .views import CustomerListView,CustomerCreateView,CustomerUpdateView,CustomerDetailsView,CustomerDeleteView,CustomerDisableView,CustomerEnableView,AddPackage,ListPackage,PackageDetailsView,PackageUpdateView,PackageDeleteView,AreaAddView,AreaDeleteView,AreaListView,AreaUpdateView,search_customer,mikrotik_users_list
 urlpatterns = [
     path('customer/',CustomerListView.as_view(),name="cmr_list"),
-    path('customer/mikrotik',mikrotik_list_users,name="cmr_mlist"),
+    path('customer/mikrotik',mikrotik_users_list,name="cmr_mlist"),
     path('customer/add/',CustomerCreateView.as_view(),name="cmr_add"),
     path('customer/update/<int:pk>/',CustomerUpdateView.as_view(),name="cmr_upd"),
     path('customer/detail/<int:pk>/',CustomerDetailsView.as_view(),name="cmr_det"),

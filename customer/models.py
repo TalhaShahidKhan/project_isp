@@ -1,9 +1,11 @@
+from typing import Any, Iterable
 from django.db import models
 from django.contrib.auth import get_user_model
 from datetime import date,timedelta
 from django.core.exceptions import ValidationError
-import json
+from routeros_api import RouterOsApiPool
 # Create your models here.
+from .mikrotik import add_user_to_mikrotik,remove_mikrotik_user,update_mikrotik_user,active_user,deactivate_user
 
 User = get_user_model()
 
@@ -16,6 +18,7 @@ class CustomerManager(models.Manager):
             raise ValidationError(f"You have reached your limit of { user.subscription.plan.customer_limit} customers.")
         customer = self.create(user=user, **kwargs)
         return customer
+    
 
 
 
@@ -47,15 +50,21 @@ class Customer(models.Model):
     ]
     customer_id = models.CharField(max_length=10,null=True,blank=True)
     name = models.CharField(max_length=110)
+    password = models.CharField(max_length=110)
     phone_number = models.CharField(max_length=11,blank=False,null=False)
     admin = models.ForeignKey(User,related_name="customers",on_delete=models.CASCADE)
     area = models.ForeignKey(Area,related_name="customers",on_delete=models.SET_NULL,null=True)
     package = models.ForeignKey(Package,related_name="customers",on_delete=models.SET_NULL,null=True)
     duration = models.CharField(choices=duration_choices,max_length=110)
     expairy = models.DateTimeField(blank=True,null=True)
-    active = models.BooleanField(default=True,null=True,blank=True)
+    active = models.BooleanField(default=False,null=True,blank=True)
 
     objects = CustomerManager()
+
+
+    def get_connection(self):
+        Connection = RouterOsApiPool(host=self.admin.mikrotik_host,username=self.admin.mikrotik_username,password=self.admin.mikrotik_password,port=self.admin.mikrotik_port,use_ssl=self.admin.mikrotik_use_ssl,ssl_verify=self.admin.mikrotik_verify_ssl,ssl_verify_hostname=self.admin.mikrotik_ssl_verify_hostname,plaintext_login=True)
+        return Connection
 
     def set_expairy(self):
         if self.duration == self.ONE_MONTH:
@@ -67,10 +76,24 @@ class Customer(models.Model):
             # Set the expiry date to the 10th of the next month
             self.expairy = first_day_next_month.replace(day=10)
     def enable_internet(self):
+        conn = self.get_connection()
+        active_user(conn=conn,uid=self.customer_id,username=self.name)
         self.active = True
     def disable_internet(self):
+        conn=self.get_connection()
+        deactivate_user(conn=conn,uid=self.customer_id,username=self.name)
         self.active = False
-    
+
+    def add_to_mik(self):
+        conn = self.get_connection()
+        return add_user_to_mikrotik(conn=conn,pkg=self.package.name,username=self.name,password=self.password)
+    def remove_from_mik(self):
+        conn = self.get_connection()
+        return remove_mikrotik_user(conn=conn,username=self.name,password=self.password)
+    def update_in_mik(self):
+        conn = self.get_connection()
+        return update_mikrotik_user(conn=conn,pkg=self.package.name,username=self.name,password=self.password)
+
 
     def __str__(self) -> str:
         return f"{self.name}-->{self.admin}"
