@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Contact Developer{% endblock title %}
+{% load static %}
+{% block body %}
+    <section class="mb-8 py-4 shadow-lg rounded-xl dark:bg-gray-800">
+        <h1 class="text-gray-900 dark:text-white text-4xl font-bold text-center">Contact Developer</h1>
+    </section>
+    <section class="bg-blue-200 dark:bg-gray-900 py-5 sm:flex sm:flex-col lg:flex-row my-14">
+
+        <div class="py-8 px-4 mx-auto max-w-screen-sm sm:py-16 lg:px-6">
+    
+    
+            <img class="rounded-full w-1/2 h-1/2 mx-auto lg:w-96 lg:h-96"
+                src="{% static "img/dev3.jpg" %}"
+                alt="image description">
+    
+    
+        </div>
+        <div class="py-8 px-4 mx-auto max-w-[550px] sm:p-16 lg:px-6">
+            <div class="max-w-screen-sm">
+                <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Talha Shahid Khan</h2>
+                
+                <p class="mb-8 font-light text-gray-500 sm:text-xl dark:text-gray-400">Result Driven Python/Django
+                    Developer | API Specialist with Django Rest Framework | HTML, CSS, Tailwind CSS, JavaScript |
+                    Actively seeking for Opportunity in Web Development</p>
+                <div class="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
+                    <a href="https://github.com/TalhaShahidKhan/"
+                        class="inline-flex items-center justify-center px-4 py-2.5 text-base font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
+                        GitHub
+                    </a> 
+                   <a href="www.linkedin.com/in/talha-shahid-khan/"
+                        class="inline-flex items-center justify-center px-4 py-2.5 text-base font-medium text-center text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+                        LinkedIn
+                    </a> 
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="bg-blue-200 dark:bg-gray-900 py-5 sm:flex sm:flex-col lg:flex-row my-14">
+        <div class="py-8 px-4 mx-auto max-w-[550px] sm:p-16 lg:px-6">
+            <div class="max-w-screen-sm">
+                <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Subrata Sutradhar</h2>
+                
+                <p class="mb-8 font-light text-gray-500 sm:text-xl dark:text-gray-400"></p>
+                <div class="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
+                    <a href="https://www.facebook.com/profile.php?id=100093200332118"
+                        class="inline-flex items-center justify-center px-4 py-2.5 text-base font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
+                        Facebook
+                    </a> 
+                   <a href="https://twitter.com/TSKhan_5429"
+                        class="inline-flex items-center justify-center px-4 py-2.5 text-base font-medium text-center text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+                        Twitter (X)
+                    </a> 
+                </div>
+            </div>
+        </div>
+        <div class="py-8 px-4 mx-auto max-w-screen-sm sm:py-16 lg:px-6">
+    
+    
+            <img class="rounded-full w-1/2 h-1/2 mx-auto lg:w-96 lg:h-96"
+                src="{% static "img/dev.jpg" %}"
+                alt="image description">
+    
+    
+        </div>
+    </section>
+{% endblock body %}

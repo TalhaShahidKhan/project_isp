@@ -5,24 +5,81 @@
 
 
 
+    <div class="flex items-center flex-col justify-center">
+        <section class="bg-blue-200 dark:bg-gray-900">
+            <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+                <div class="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
+                    <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Here are the available Plans</h2>
+                </div>
+                <div class="lg:grid lg:grid-cols-3 sm:gap-6 xl:gap-10 lg:space-y-0">
+                    {% for pln in plans %}
 
-    <h1>Plan List</h1>
+            <!-- Pricing Card -->
+                        <div class="flex flex-col p-6 mx-auto max-w-lg text-center text-gray-900 bg-blue-300 rounded-lg border border-gray-100 shadow dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white">
+                            <h3 class="mb-4 text-2xl font-semibold">{{pln.name}}</h3>
+                            <div class="flex justify-center items-baseline my-8">
+                                <span class="mr-2 text-5xl font-extrabold">BDT{{pln.price}}</span>
+                                <span class="text-gray-500 dark:text-gray-400">/month</span>
+                            </div>
 
-    {% if not request.user.subscription %}
-        <a href="{% url "subs:add_sub" %}">Choose a Plan</a>
-    {% else %}
-        <a href="{% url "subs:upd_sub" request.user.subscription.id%}">Update Plan</a>
-    {% endif %}
+                            <ul role="list" class="mb-8 space-y-4 text-left">
+                                <li class="flex items-center space-x-3">
+                                    <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                                    <span>Customer:{{pln.customer_limit}}</span>
+                                </li>
+                                <li class="flex items-center space-x-3">
+                                    <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                                    <span>Duration:{{pln.duration}} Days </span>
+                                </li>
+                                <li class="flex items-center space-x-3">
 
-    {% for pln in plans %}
+                                </ul>
+                                {% if not request.user.subscription %}
+                                    <a href="{% url "subs:add_sub" %}" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-blue-900">Choose Plan</a>
+                                {% else %}
+                                    <a href="{% url "subs:upd_sub" request.user.subscription.id%}" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-blue-900">Update Plan</a>
+                                {% endif %}
+                            </div>
 
-        <div class="my-2 flex items-center justify-center gap-4">
-            <h1>{{pln.name}}</h1>
-            {% if pln == request.user.subscription.plan and request.user.subscription.is_active %}
-                <button type="button" class="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Active</button>
-            {% endif %}
-        </div>
+                    {% endfor %}
 
-    {% endfor %}
+                </div>
+            </div>
+        </section>
+        <section class="bg-blue-200 dark:bg-gray-900">
+            <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+                <div class="mx-auto max-w-screen-md text-center my-11 lg:mb-12">
+                    <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Non-Subscription Plans</h2>
+                </div>
+                <div class="lg:grid lg:grid-cols-2 sm:gap-6 xl:gap-10 lg:space-y-0">
+                    <div class="flex flex-col p-6 mx-auto max-w-lg text-center text-gray-900 bg-blue-300 rounded-lg border border-gray-100 shadow dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white">
+                        <h3 class="mb-4 text-2xl font-semibold">Get Source Code</h3>
+                        <div class="flex justify-center items-baseline my-8">
+                            <span class="mr-2 text-5xl font-extrabold">BDT 100K</span>
+                        </div>
+
+                        <a href="" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-blue-900">Contact & Request</a>
+
+                    </div>
+                    <div class="flex flex-col p-6 mx-auto max-w-lg text-center text-gray-900 bg-blue-300 rounded-lg border border-gray-100 shadow dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white">
+                        <h3 class="mb-4 text-2xl font-semibold">Install in Own Server</h3>
+                        <div class="flex justify-center items-baseline my-8">
+                            <span class="mr-2 text-5xl font-extrabold">BDT 5a10K</span>
+                        </div>
+
+                        <a href="" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-blue-900">Contact & Request</a>
+
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </div>
 
 {% endblock body %}
+
+
+
+
+

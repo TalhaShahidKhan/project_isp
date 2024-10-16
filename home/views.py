@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import DetailView, UpdateView,View
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from subscription.models import SubscriptionPlan
 from django.contrib import messages
 # Create your views here.
 
@@ -14,12 +14,20 @@ User = get_user_model()
 def home_page(request):
     if request.user.is_authenticated:
         return redirect("home:dashboard")
-    return render(request, "home/home.html")
+    plans = SubscriptionPlan.objects.all()
+    context = {
+        'plans':plans
+    }
+    return render(request, "home/home.html",context=context)
 
 
 @login_required(login_url="account_login")
 def dashboard(request):
     return render(request, "home/dashboard.html")
+
+@login_required(login_url="account_login")
+def contact(request):
+    return render(request, "home/contact.html")
 
 
 class UserProfileView(LoginRequiredMixin, DetailView):
