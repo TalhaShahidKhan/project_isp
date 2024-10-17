@@ -1,6 +1,8 @@
 from django.contrib import admin
 from .models import Subscription,SubscriptionPlan
 from django.utils import timezone
+from unfold.admin import ModelAdmin
+
 
 class SubscriptionAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
@@ -11,3 +13,4 @@ class SubscriptionAdmin(admin.ModelAdmin):
 
 admin.site.register(Subscription, SubscriptionAdmin)
 admin.site.register(SubscriptionPlan)
+

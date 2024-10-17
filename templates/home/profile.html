@@ -1,37 +1,127 @@
 {% extends "base.html" %}
 {% block title %}Profile {{user.first_name}} {{user.last_name}}{% endblock title %}
 {% block body %}
-
-    <div class="flex flex-col items-center justify-center gap-5">
-        <div class="flex items-center justify-center gap-24">
-
-            <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                <li>User Details</li>
-                <li class="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">{{user.username}}</li>
-                <li class="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">{{user.first_name}}</li>
-                <li class="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">{{user.last_name}}</li>
-                <li class="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">{{user.email}}</li>
-            </ul>
-
-            {% if request.user.mikrotik_username %}
-                <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    <li>Mikrotik Details</li>
-                    <li class="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">{{user.mikrotik_username}}</li>
-                    <li class="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">{{user.mikrotik_host}}</li>
-                    <li class="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">{{user.mikrotik_port}}</li>
-                    <li class="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">{{user.mikrotik_use_ssl}}</li>
-                </ul>
-            {% endif %}
+<section class="min-h-[70vh] flex items-center justify-center gap-5">
+    <div class="bg-white overflow-hidden shadow rounded-lg border dark:bg-blue-900 ">
+        <div class="px-4 py-5 sm:px-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+                User details
+            </h3>
         </div>
-        <a href="{% url "home:home" %}">Go Back</a>
-        <a href="{% url "home:profile_upd" request.user.username %}">Update Profile</a>
-        {% if not request.user.mikrotik_username %}
-            <a href="{% url "home:profile_add_mik" request.user.username %}">Add Mirotik Details</a>
-            </div>
-
+        <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+            <dl class="sm:divide-y sm:divide-gray-200">
+                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-white">
+                        Full name
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
+                        {{user.first_name}} {{user.last_name}}
+                    </dd>
+                </div>
+                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-white">
+                        Username
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
+                        {{user.username}}
+                    </dd>
+                </div>
+                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-white">
+                        Email address
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
+                        {{user.email}}
+                    </dd>
+                </div>
+                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-white">
+                        Phone number
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
+                        {{user.bkash_number}}
+                    </dd>
+                </div>
+                
+            </dl>
+        </div>
+    </div>
+    <div class="bg-white overflow-hidden shadow rounded-lg border dark:bg-blue-900 ">
+        <div class="px-4 py-5 sm:px-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+                Mikrotik Details
+            </h3>
+        </div>
+        <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+            <dl class="sm:divide-y sm:divide-gray-200">
+                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-white">
+                        Mikrotik Host
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
+                        {{user.mikrotik_host}}
+                    </dd>
+                </div>
+                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-white">
+                        Mikrotik Username
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
+                        {{user.mikrotik_username}}
+                    </dd>
+                </div>
+                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-white">
+                        Mikrotik Password
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
+                        {{user.mikrotik_password}}
+                    </dd>
+                </div>
+                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-white">
+                        Mikrotik Port
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
+                        {{user.mikrotik_port}}
+                    </dd>
+                </div>
+                
+            </dl>
+        </div>
+    </div>
+    <div>
+        {% if user.mikrotik_use_ssl %}
+        <div class="flex items-center">
+            <input disabled checked id="disabled-checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+            <label for="disabled-checked-checkbox" class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">Mikrotik Use SSL</label>
+        </div>
+        {% else %}
+        <div class="flex items-center">
+            <input disabled id="disabled-checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+            <label for="disabled-checked-checkbox" class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">Mikrotik Use SSL</label>
+        </div>
         {% endif %}
-        <div>
-    {% comment %} <a href="{% url "" %}">Mikrotik Management</a> {% endcomment %}
+        {% if user.mikrotik_verify_ssl %}
+        <div class="flex items-center">
+            <input disabled checked id="disabled-checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+            <label for="disabled-checked-checkbox" class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">Mikrotik Verify SSL</label>
         </div>
+        {% else %}
+        <div class="flex items-center">
+            <input disabled  id="disabled-checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+            <label for="disabled-checked-checkbox" class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">Mikrotik Verify SSL</label>
+        </div> 
+        {% endif %}
+    </div>
+</section>
 
+<section class="min-h-12 flex items-center justify-center gap-5">
+
+    <div><a href={% url "home:profile_upd" user.username %}  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Update Profile</a>
+    </div>
+    <div><a href="{% url "home:home" %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Go back</a>
+    </div>
+
+</section>
 {% endblock body %}
