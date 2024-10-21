@@ -11,6 +11,19 @@ class SubscriptionAdmin(admin.ModelAdmin):
             return False
         return super().has_add_permission(request)
 
-admin.site.register(Subscription, SubscriptionAdmin)
-admin.site.register(SubscriptionPlan)
+
+
+
+@admin.register(Subscription)
+class UserAdmin(SubscriptionAdmin,ModelAdmin):
+    pass
+
+
+@admin.register(SubscriptionPlan)
+class UserAdmin(ModelAdmin):
+    pass
+
+
+
+
 

@@ -4,5 +4,10 @@ from unfold.admin import ModelAdmin
 # Register your models here.
 
 
-admin.site.register(CustomerPayment)
-admin.site.register(UserPayment)
+@admin.register(UserPayment)
+class UserAdmin(ModelAdmin):
+    pass
+
+@admin.register(CustomerPayment)
+class UserAdmin(ModelAdmin):
+    pass

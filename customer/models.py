@@ -5,7 +5,7 @@ from datetime import date,timedelta
 from django.core.exceptions import ValidationError
 from routeros_api import RouterOsApiPool
 # Create your models here.
-from .mikrotik import add_user_to_mikrotik,remove_mikrotik_user,update_mikrotik_user,active_user,deactivate_user
+from .mikrotik import add_user_to_mikrotik,remove_mikrotik_user,update_mikrotik_user,active_user,deactivate_user,get_single_user
 
 User = get_user_model()
 
@@ -77,23 +77,30 @@ class Customer(models.Model):
             self.expairy = first_day_next_month.replace(day=10)
     def enable_internet(self):
         conn = self.get_connection()
-        active_user(conn=conn,uid=self.customer_id,username=self.name)
+        active_user(conn=conn,uid=self.customer_id)
         self.active = True
+        conn.disconnect()
     def disable_internet(self):
         conn=self.get_connection()
-        deactivate_user(conn=conn,uid=self.customer_id,username=self.name)
+        deactivate_user(conn=conn,username=self.name)
         self.active = False
+        conn.disconnect()
 
     def add_to_mik(self):
         conn = self.get_connection()
-        return add_user_to_mikrotik(conn=conn,pkg=self.package.name,username=self.name,password=self.password)
+        add_user_to_mikrotik(conn=conn,pkg=self.package.name,username=self.name,password=self.password)
+        user = get_single_user(conn=conn,name=self.name)
+        self.customer_id=user["id"]
+        conn.disconnect()
+        
     def remove_from_mik(self):
         conn = self.get_connection()
-        return remove_mikrotik_user(conn=conn,username=self.name,password=self.password)
+        remove_mikrotik_user(conn=conn,uid=self.customer_id)
+        conn.disconnect()
     def update_in_mik(self):
         conn = self.get_connection()
-        return update_mikrotik_user(conn=conn,pkg=self.package.name,username=self.name,password=self.password)
-
+        update_mikrotik_user(conn=conn,pkg=self.package.name,username=self.name,password=self.password)
+        conn.disconnect()
 
     def __str__(self) -> str:
         return f"{self.name}-->{self.admin}"

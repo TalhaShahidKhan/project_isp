@@ -2,34 +2,110 @@
 {% block title %}Details of {{cmr.name}}{% endblock title %}
 {% block body %}
 
-
-
-    <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-        <li class="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">{{cmr.name}}</li>
-        <li class="w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600">{{cmr.phone_number}}</li>
-        <li class="w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600">{{cmr.area}}</li>
-        <li class="w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600">{{cmr.package}}</li>
-        <li class="w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600">{{cmr.duration}}</li>
-        <li class="w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600">{{cmr.expairy}}</li>
-        <li class="w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600">{{cmr.active}}</li>
-    </ul>
-
-
+<section class="min-h-[70vh] flex items-center justify-center gap-5">
+    <div class="bg-white overflow-hidden shadow rounded-lg border dark:bg-blue-900 ">
+        <div class="px-4 py-5 sm:px-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+                Customer details
+            </h3>
+        </div>
+        <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+            <dl class="sm:divide-y sm:divide-gray-200">
+                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-white">
+                        Full name
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
+                        {{cmr.name}}
+                    </dd>
+                </div>
+                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-white">
+                        Phone Number
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
+                        {{cmr.phone_number}}
+                    </dd>
+                </div>
+                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-white">
+                        Area
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
+                        {{cmr.area}}
+                    </dd>
+                </div>
+                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-white">
+                        Package
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
+                        {{cmr.package}}
+                    </dd>
+                </div>
+                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-white">
+                        Duration
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
+                        {{cmr.duration}}
+                    </dd>
+                </div>
+                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-white">
+                        Expairy
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
+                        {{cmr.expairy}}
+                    </dd>
+                </div>
+                
+            </dl>
+        </div>
+    </div>
     <div>
         {% if cmr.active %}
-            <form action="{% url "customer:cmr_dis" cmr.id%}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Disable</a>
-            </form>
+        <div class="flex items-center">
+            <input disabled checked id="disabled-checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+            <label for="disabled-checked-checkbox" class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">Active</label>
+        </div>
         {% else %}
-            <form action="{% url "customer:cmr_enb" cmr.id%}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Enable</a>
-            </form>
+        <div class="flex items-center">
+            <input disabled id="disabled-checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+            <label for="disabled-checked-checkbox" class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">Active</label>
+        </div>
         {% endif %}
     </div>
-    <a href="{% url "customer:cmr_upd" cmr.id %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Update Customer</a>
+    
+<div>
+    {% if cmr.active %}
+        <form action="{% url "customer:cmr_dis" cmr.id%}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Disable</a>
+        </form>
+    {% else %}
+        <form action="{% url "customer:cmr_enb" cmr.id%}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Enable</a>
+        </form>
+    {% endif %}
+</div>
+
+
+
+</section>
+
+<section class="min-h-12 flex items-center justify-center gap-5">
+
     <div>
-        <a href="{% url "customer:cmr_list" %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Go Back</a>
+        <a href="{% url "customer:cmr_upd" cmr.id %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Update Customer</a>
     </div>
+    <div>
+    <a href="{% url "customer:cmr_list" %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Go Back</a>
+    </div>
+
+</section>
+   
 {% endblock body %}
+
+

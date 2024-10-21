@@ -49,8 +49,8 @@ class CustomerCreateView(LoginRequiredMixin,SubscriptionRequiredMixin, CreateVie
                 )
                 return self.form_invalid(form)
             messages.success(self.request, "Customer added successfully.")
-            instance = self.object
-            instance.add_to_mik()
+            self.object=form.save(commit=False)
+            self.object.add_to_mik()
             return super().form_valid(form)
         except Exception as e:
             messages.error(self.request,"There is an error in API. Please Try again letter or contact Developer.")
@@ -64,25 +64,26 @@ class CustomerCreateView(LoginRequiredMixin,SubscriptionRequiredMixin, CreateVie
 
 class CustomerUpdateView(LoginRequiredMixin,SubscriptionRequiredMixin, UpdateView):
     model = Customer
-    form_class = CustomerCreateFrom
+    fields =  ["name","password","area","package","duration","phone_number"]
     template_name = "customer/customer_update.html"
     success_url = reverse_lazy("customer:cmr_list")
 
     def form_valid(self, form):
-        updated_duration = form.instance.duration
-        customer = self.get_object()
-        old_duration = customer.duration
-        if updated_duration == old_duration:
-            form.instance.duration = old_duration
-        self.object.set_expairy()
-        if form.instance.active == True:
-            self.object.enable_internet()
-        elif form.instance.active == False:
-            self.object.disable_internet()
-        response = super().form_valid(form)
-        instance = self.object
-        instance.update_in_mik()
-        return response
+        try:
+            updated_duration = form.instance.duration
+            customer = self.get_object()
+            old_duration = customer.duration
+            if updated_duration == old_duration:
+                form.instance.duration = old_duration
+            self.object.set_expairy()
+            response = super().form_valid(form) 
+            self.object.update_in_mik()
+            messages.success(self.request,"Customer Added Successfully")
+            return response
+        except Exception as e:
+            messages.error(self.request,"There is an error in API. Please Try again letter or contact Developer.")
+            return redirect("customer:cmr_list")
+
 
 
 class CustomerDetailsView(LoginRequiredMixin,SubscriptionRequiredMixin, DetailView):
@@ -96,9 +97,15 @@ class CustomerDeleteView(LoginRequiredMixin,SubscriptionRequiredMixin, DeleteVie
     success_url = reverse_lazy("customer:cmr_list")
 
     def form_valid(self, form):
-        instance = self.object
-        instance.remove_from_mik()
-        return super().form_valid(form)
+        try:
+            instance = self.object
+            instance.remove_from_mik()
+            messages.success(self.request,"Customer Deleted")
+            return super().form_valid(form)
+        except Exception as e:
+            messages.error(self.request,"There is an error in API. Please Try again letter or contact Developer.")
+            return redirect("customer:cmr_list")
+            
     
 
 
@@ -111,8 +118,13 @@ class CustomerEnableView(LoginRequiredMixin,SubscriptionRequiredMixin, UpdateVie
         return reverse_lazy("customer:cmr_det", kwargs={"pk": self.object.pk})
 
     def form_valid(self, form):
-        self.object.enable_internet()
-        return super().form_valid(form)
+        try:
+            self.object.enable_internet()
+            messages.success(self.request,"Internet Enabled")
+            return super().form_valid(form)
+        except Exception as e:
+            messages.error(self.request,"There is an error in API. Please Try again letter or contact Developer.")
+            return redirect("customer:cmr_list")
 
 
 class CustomerDisableView(LoginRequiredMixin,SubscriptionRequiredMixin, UpdateView):
@@ -124,8 +136,13 @@ class CustomerDisableView(LoginRequiredMixin,SubscriptionRequiredMixin, UpdateVi
         return reverse_lazy("customer:cmr_det", kwargs={"pk": self.object.pk})
 
     def form_valid(self, form):
-        self.object.disable_internet()
-        return super().form_valid(form)
+        try:
+            self.object.disable_internet()
+            messages.success(self.request,"Internet Disabled")
+            return super().form_valid(form)
+        except Exception as e:
+            messages.error(self.request,"There is an error in API. Please Try again letter or contact Developer.")
+            return redirect("customer:cmr_list")
 
 
 class AddPackage(LoginRequiredMixin,SubscriptionRequiredMixin, CreateView):
@@ -219,7 +236,6 @@ def mikrotik_users_list(request):
         conn = RouterOsApiPool(host=request.user.mikrotik_host,username=request.user.mikrotik_username,password=request.user.mikrotik_password,port=request.user.mikrotik_port,use_ssl=request.user.mikrotik_use_ssl,ssl_verify=request.user.mikrotik_verify_ssl,ssl_verify_hostname=request.user.mikrotik_ssl_verify_hostname,plaintext_login=True)
         users = get_all_users_from_mikrotik(conn=conn)
         customer = []
-        print(users)
         for usr in users:
             usr['last_logged_out'] = usr['last-logged-out']
             usr['limit_bytes_in'] = usr['limit-bytes-in']

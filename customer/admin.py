@@ -2,10 +2,19 @@ from django.contrib import admin
 from .models import Customer,Package,Area
 from unfold.admin import ModelAdmin
 
-# Register your models here.
+@admin.register(Customer)
+class UserAdmin(ModelAdmin):
+    pass
 
-admin.site.register(Customer)
-admin.site.register(Package)
-admin.site.register(Area)
+
+
+@admin.register(Area)
+class UserAdmin(ModelAdmin):
+    pass
+
+
+@admin.register(Package)
+class UserAdmin(ModelAdmin):
+    pass
 
 

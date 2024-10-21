@@ -25,7 +25,6 @@ def home_page(request):
 def dashboard(request):
     return render(request, "home/dashboard.html")
 
-@login_required(login_url="account_login")
 def contact(request):
     return render(request, "home/contact.html")
 
