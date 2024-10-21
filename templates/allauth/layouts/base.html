@@ -12,11 +12,7 @@
       {% endblock head_title %}
     </title>
     {% block extra_head %}
-      {% if debug %}
-      <link rel="stylesheet" href="{% static "./css/output.css" %}">
-      {% else %}
-      <link rel="stylesheet" href="{% static "./css/output.min.css" %}">
-      {% endif %}
+    <link rel="stylesheet" href="{% if debug %}{% static "./css/output.css" %}{% else %}{% static "./css/output.min.css" %}{% endif %}">
       <link rel="stylesheet" href="{% static "./css/flowbite.min.css" %}">
       <link rel="icon" type="image/x-icon" href="{% static "/img/logoi.ico" %}">
     {% endblock extra_head %}
