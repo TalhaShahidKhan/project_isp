@@ -12,7 +12,7 @@
       {% endblock head_title %}
     </title>
     {% block extra_head %}
-      {% if DEBUG %}
+      {% if debug %}
       <link rel="stylesheet" href="{% static "./css/output.css" %}">
       {% else %}
       <link rel="stylesheet" href="{% static "./css/output.min.css" %}">
