@@ -15,6 +15,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # Keeps Python from buffering stdout and stderr to avoid situations where
 # the application crashes without emitting any logs due to buffering.
 ENV PYTHONUNBUFFERED=1
+
 ARG SECRET_KEY
 ARG DEBUG
 ARG POSTGRES_DB
@@ -28,7 +29,11 @@ ARG BKASH_APP_KEY
 ARG BKASH_APP_SECRET
 ARG BKASH_USERNAME
 ARG BKASH_PASSWORD
-
+ARG EMAIL_HOST
+ARG EMAIL_PORT
+ARG EMAIL_HOST_USER
+ARG EMAIL_HOST_PASSWORD
+ARG EMAIL_USE_TLS
 
 ENV SECRET_KEY=${SECRET_KEY}
 ENV DEBUG=${DEBUG}
@@ -43,6 +48,11 @@ ENV BKASH_APP_KEY=${BKASH_APP_KEY}
 ENV BKASH_APP_SECRET=${BKASH_APP_SECRET}
 ENV BKASH_USERNAME=${BKASH_USERNAME}
 ENV BKASH_PASSWORD=${BKASH_APP_PASSWORD}
+ENV EMAIL_HOST=${EMAIL_HOST}
+ENV EMAIL_PORT=${EMAIL_PORT}
+ENV EMAIL_HOST_USER=${EMAIL_HOST_USER}
+ENV EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
+ENV EMAIL_USE_TLS=${EMAIL_USE_TLS}
 
 
 
@@ -72,13 +82,11 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 USER appuser
 
 # Copy the source code into the container.
-COPY . .
-
+COPY . /app/
 
 RUN python manage.py collectstatic --noinput
-RUN python manage.py makemigrations --noinput
-RUN python manage.py migrate
 
+RUN python manage.py migrate
 
 # Expose the port that the application listens on.
 EXPOSE 8000
