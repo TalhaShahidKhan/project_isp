@@ -9,6 +9,20 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      DEBUG: ${{ secrets.DEBUG }}
+      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+      POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+      CELERY_BROKER_URL: ${{ secrets.CELERY_BROKER_URL }}
+      CELERY_RESULT_BACKEND: ${{ secrets.CELERY_RESULT_BACKEND }}
+      BKASH_APP_KEY: ${{ secrets.BKASH_APP_KEY }}
+      BKASH_APP_SECRET: ${{ secrets.BKASH_APP_SECRET }}
+      BKASH_USERNAME: ${{ secrets.BKASH_USERNAME }}
+      BKASH_PASSWORD: ${{ secrets.BKASH_PASSWORD }}
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
