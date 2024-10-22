@@ -56,7 +56,7 @@ ENV EMAIL_USE_TLS=${EMAIL_USE_TLS}
 
 
 
-WORKDIR /app
+WORKDIR .
 
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/
@@ -82,7 +82,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 USER appuser
 
 # Copy the source code into the container.
-COPY . /app/
+COPY . .
 
 RUN python manage.py collectstatic --noinput
 
