@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("SECRET_KEY", cast=str)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG =  config("DEBUG", cast=bool)
+DEBUG = config("DEBUG", cast=bool)
 
 ALLOWED_HOSTS = ["*"]
 
@@ -57,7 +57,6 @@ INSTALLED_APPS = [
     "subscription.apps.SubscriptionConfig",
     "payment.apps.PaymentConfig",
 ]
-
 
 
 MIDDLEWARE = [
@@ -96,12 +95,24 @@ WSGI_APPLICATION = "ispms.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+if DEBUG:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": config("POSTGRES_DB"),
+            "USER": config("POSTGRES_USER",cast=str),
+            "PASSWORD": config("POSTGRES_PASSWORD",cast=str),
+            "HOST": config("POSTGRES_HOST",cast=str),
+            "PORT": config('POSTGRES_PORT',cast=int),
+        }
+    }
 
 
 # All Auth Config
