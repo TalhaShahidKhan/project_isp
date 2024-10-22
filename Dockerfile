@@ -46,6 +46,8 @@ COPY . .
 
 
 RUN python manage.py collectstatic --noinput
+RUN python manage.py makemigrations --noinput
+RUN python manage.py migrate
 
 
 # Expose the port that the application listens on.
