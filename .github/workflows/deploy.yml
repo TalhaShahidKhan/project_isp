@@ -9,30 +9,28 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: [3.12]
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v3
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-      - name: Run Tests
-        run: |
-          python manage.py test
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Build and push Docker images
-        run: |
-          echo "${{secrets.DOCKER_PASSWORD}}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/ispms:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/ispms:latest
+    - name: Set up Python
+      uses: actions/setup-python@v4  # Updated to v4 to avoid Node.js 16 deprecation warning
+      with:
+        python-version: '3.12'
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Run Tests
+      run: |
+        python manage.py test
+
+    - name: Build and push Docker images
+      run: |
+        echo "${{secrets.DOCKER_PASSWORD}}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/ispms:latest .
+        docker push ${{ secrets.DOCKER_USERNAME }}/ispms:latest
 
     # - name: Deploy to VPS or Kubernetes
     #   run: |
