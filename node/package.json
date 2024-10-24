@@ -1,0 +1,15 @@
+{
+  "devDependencies": {
+    "tailwindcss": "^3.4.10"
+  },
+  "scripts": {
+    "tailwind": "npx tailwindcss -i ../static/css/input.css -o ../static/css/output.css --watch",
+    "minify": "cleancss ../static/css/output.css -o ../static/css/output.min.css ",
+    "build": "concurrently \"npm run tailwind\" \"npm run minify\""
+  },
+  "dependencies": {
+    "clean-css-cli": "^5.6.3",
+    "concurrently": "^9.0.1",
+    "flowbite": "^2.5.2"
+  }
+}
