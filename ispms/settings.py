@@ -96,24 +96,21 @@ WSGI_APPLICATION = "ispms.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# if DEBUG == True:
-DATABASES = {
+if DEBUG == True:
+    DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
             "NAME": BASE_DIR / "db.sqlite3",
         }
     }
-# else:
-#     DATABASES = {
-#         "default": {
-#             "ENGINE": "django.db.backends.postgresql",
-#             "NAME": config("POSTGRES_DB"),
-#             "USER": config("POSTGRES_USER",cast=str),
-#             "PASSWORD": config("POSTGRES_PASSWORD",cast=str),
-#             "HOST": config("POSTGRES_HOST",cast=str),
-#             "PORT": config('POSTGRES_PORT',cast=int),
-#         }
-#     }
+else:
+    import dj_database_url
+
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=config("DATABASE_URL",cast=str),
+        )
+    }
 
 
 # All Auth Config
