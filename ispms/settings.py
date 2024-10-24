@@ -28,7 +28,7 @@ DEBUG = config("DEBUG", cast=bool)
 
 ALLOWED_HOSTS = ["*"]
 
-
+print(DEBUG)
 # Application definition
 
 INSTALLED_APPS = [
@@ -61,6 +61,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+        'whitenoise.middleware.WhiteNoiseMiddleware',  # Add this line
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -95,24 +96,24 @@ WSGI_APPLICATION = "ispms.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-if DEBUG:
-    DATABASES = {
+# if DEBUG == True:
+DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
             "NAME": BASE_DIR / "db.sqlite3",
         }
     }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": config("POSTGRES_DB"),
-            "USER": config("POSTGRES_USER",cast=str),
-            "PASSWORD": config("POSTGRES_PASSWORD",cast=str),
-            "HOST": config("POSTGRES_HOST",cast=str),
-            "PORT": config('POSTGRES_PORT',cast=int),
-        }
-    }
+# else:
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.postgresql",
+#             "NAME": config("POSTGRES_DB"),
+#             "USER": config("POSTGRES_USER",cast=str),
+#             "PASSWORD": config("POSTGRES_PASSWORD",cast=str),
+#             "HOST": config("POSTGRES_HOST",cast=str),
+#             "PORT": config('POSTGRES_PORT',cast=int),
+#         }
+#     }
 
 
 # All Auth Config
@@ -170,6 +171,8 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
