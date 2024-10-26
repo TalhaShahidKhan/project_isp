@@ -28,7 +28,7 @@ jobs:
         https://hub.docker.com/v2/repositories/${{ secrets.DOCKER_USERNAME }}/ispms
 
     - name: Push Docker Image to Docker Hub
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/ispms:${{ github.sha }}
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/ispms:latest
 
     - name: Logout from Docker Hub
       run: docker logout
