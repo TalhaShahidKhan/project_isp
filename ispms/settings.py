@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "allauth.account",
     "widget_tweaks",
     "slippers",
+    "compressor",
     # MyApps
     "home.apps.HomeConfig",
     "customer.apps.CustomerConfig",
@@ -58,6 +59,13 @@ INSTALLED_APPS = [
     "payment.apps.PaymentConfig",
 ]
 
+
+COMPRESS_ROOT = BASE_DIR / 'static'
+
+COMPRESS_ENABLED = True
+
+STATICFILES_FINDERS = ['compressor.finders.CompressorFinder','django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
