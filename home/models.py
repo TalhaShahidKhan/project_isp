@@ -6,6 +6,10 @@ from django.contrib.auth.models import AbstractUser
 
 class CustomUser(AbstractUser):
     bkash_number = models.CharField(max_length=11,blank=True,null=True)
+    bkash_username = models.CharField(max_length=255,blank=True,null=True)
+    bkash_password = models.CharField(max_length=255,blank=True,null=True)
+    bkash_app_key = models.CharField(max_length=255,blank=True,null=True)
+    bkash_secret_key = models.CharField(max_length=255,blank=True,null=True)
     mikrotik_host=models.CharField(max_length=32,blank=True,null=True)
     mikrotik_username=models.CharField(max_length=32,blank=True,null=True)
     mikrotik_password=models.CharField(max_length=32,blank=True,null=True)

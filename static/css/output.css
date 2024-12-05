@@ -1164,6 +1164,10 @@ input:checked + .toggle-bg {
   z-index: 50;
 }
 
+.m-2 {
+  margin: 0.5rem;
+}
+
 .m-3 {
   margin: 0.75rem;
 }
@@ -1943,6 +1947,10 @@ input:checked + .toggle-bg {
   background-color: rgb(224 36 36 / var(--tw-bg-opacity, 1));
 }
 
+.bg-transparent {
+  background-color: transparent;
+}
+
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
@@ -2700,6 +2708,10 @@ input:checked + .toggle-bg {
 .dark\:bg-red-800:is(.dark *) {
   --tw-bg-opacity: 1;
   background-color: rgb(155 28 28 / var(--tw-bg-opacity, 1));
+}
+
+.dark\:bg-transparent:is(.dark *) {
+  background-color: transparent;
 }
 
 .dark\:text-blue-100:is(.dark *) {

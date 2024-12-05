@@ -38,7 +38,7 @@ class UserProfileView(LoginRequiredMixin, DetailView):
 
 class UpdateProfileView(LoginRequiredMixin, UpdateView):
     model = User
-    fields = ["first_name", "last_name","bkash_number","mikrotik_host", "mikrotik_username", "mikrotik_password", "mikrotik_port", "mikrotik_use_ssl", "mikrotik_verify_ssl", "mikrotik_ssl_verify_hostname"]
+    fields = ["first_name", "last_name","bkash_number","mikrotik_host", "mikrotik_username", "mikrotik_password", "mikrotik_port", "mikrotik_use_ssl", "mikrotik_verify_ssl", "mikrotik_ssl_verify_hostname","bkash_username","bkash_password","bkash_app_key","bkash_secret_key"]
     slug_field = "username"
     template_name = "home/update_profile.html"
 

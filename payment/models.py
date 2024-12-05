@@ -21,6 +21,11 @@ class CustomerPayment(models.Model):
         related_name="payments",
         on_delete=models.CASCADE,
     )
+    admin = models.ForeignKey(
+        User,
+        related_name="customer_payment",
+        on_delete=models.CASCADE,
+    )
     payment_id = models.CharField(max_length=250,blank=True,null=True)
     trxID = models.CharField(max_length=150,blank=True, null=True)
     payment_exec_time = models.DateTimeField(blank=True,null=True,default=datetime.datetime.now())

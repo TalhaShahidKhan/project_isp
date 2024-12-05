@@ -28,7 +28,6 @@ DEBUG = config("DEBUG", cast=bool)
 
 ALLOWED_HOSTS = ["*"]
 
-print(DEBUG)
 # Application definition
 
 INSTALLED_APPS = [
@@ -60,16 +59,19 @@ INSTALLED_APPS = [
 ]
 
 
-COMPRESS_ROOT = BASE_DIR / 'static'
+COMPRESS_ROOT = BASE_DIR / "static"
 
 COMPRESS_ENABLED = True
 
-STATICFILES_FINDERS = ['compressor.finders.CompressorFinder','django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',]
+STATICFILES_FINDERS = [
+    "compressor.finders.CompressorFinder",
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-        'whitenoise.middleware.WhiteNoiseMiddleware',  # Add this line
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # Add this line
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -115,8 +117,8 @@ else:
     import dj_database_url
 
     DATABASES = {
-        'default': dj_database_url.config(
-            default=config("DATABASE_URL",cast=str),
+        "default": dj_database_url.config(
+            default=config("DATABASE_URL", cast=str),
         )
     }
 
@@ -176,7 +178,7 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
 # Default primary key field type

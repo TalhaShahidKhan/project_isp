@@ -48,11 +48,12 @@ class CustomerCreateView(LoginRequiredMixin,SubscriptionRequiredMixin, CreateVie
                     f"You have reached your limit of {user.subscription.plan.customer_limit} customers.",
                 )
                 return self.form_invalid(form)
-            messages.success(self.request, "Customer added successfully.")
             self.object=form.save(commit=False)
             self.object.add_to_mik()
+            messages.success(self.request, "Customer added successfully.")
             return super().form_valid(form)
         except Exception as e:
+            print(e)
             messages.error(self.request,"There is an error in API. Please Try again letter or contact Developer.")
             return redirect("customer:cmr_list")
 
