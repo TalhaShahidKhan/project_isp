@@ -3,7 +3,7 @@
 {% block body %}
 
     <div class="m-5 flex flex-col md:flex-row gap-8 border-b-2 py-3 border-red-100 w-full mx-auto items-center justify-center">
-        <div>
+        <div class="flex items-center justify-center flex-col md:flex-row">
             <a href="{% url "customer:cmr_add" %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Add Customer</a>
             <a href="{% url "customer:cmr_mlist" %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Mikrotik Details</a>
             <a href="{% url "home:home" %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Go Back</a>
@@ -24,34 +24,80 @@
             </div>
         </form>
     </div>
-    <div style = "left:24rem"  id="search-results" class="w-1/2 absolute">
+    <div id="search-results" class="left-0  w-full absolute z-10">
 
     </div>
 
 
-    {% for cmr in cmrs %}
-        <div class="my-9 flex gap-4 items-center justify-center">
-            {% if cmr.active %}
-                <a href="{% url "customer:cmr_det" cmr.id %}" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{cmr.name}}</h5>
-                </a>
-            {% else %}
-                <a href="{% url "customer:cmr_det" cmr.id %}" class="block max-w-sm p-6 bg-red-600 border border-gray-200 rounded-lg shadow hover:bg-red-800 dark:bg-red-800 dark:border-gray-700 dark:hover:bg-red-700">
-                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-white dark:text-white">{{cmr.name}}</h5>
-                </a>
-            {% endif %}
-            <a href="{% url "customer:cmr_upd" cmr.id %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Update Customer</a>
-            <form action="{% url "customer:cmr_del" cmr.id %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Delete Customer</button>
-            </form>
-        </div>
-    {% endfor %}
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Name
+                </th>
+                <th scope="col" class="px-6 py-3">
+                </th>
+                <th scope="col" class="px-6 py-3">
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Status
+                </th>
+                <th scope="col" class="px-6 py-3"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cmr in cmrs %}
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 ">
+                <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                    <div class="ps-3">
+                        <div class="text-2xl font-semibold">{{cmr.name}}</div>
+                    </div>  
+                </th>
+                <td class="px-6 py-4">
+                    <div class="flex items-center">
+                        <a href="{% url "customer:cmr_upd" cmr.id %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Update Customer</a>
+                    </div> 
+               </td>
+                <td class="px-6 py-4">
+                    <div class="flex items-center">
+                        <form action="{% url "customer:cmr_del" cmr.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Delete Customer</button>
+                        </form>
+                    </div>
+                </td>
+                <td class="px-6 py-4">
+                    {% if cmr.active %}
+                    <div class="flex items-center justify-start">
+                        <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div> 
+                        <span>Online</span>
+                    </div>                    {% else %}
+                    <div class="flex items-center justify-start">
+                        <div class="h-2.5 w-2.5 rounded-full bg-red-500 me-2"></div> 
+                        <span>Offline</span>
+                    </div>
+                    {% endif %}
+                </td>
+                <td class="px-6 py-4">
+                    <a href="{% url "customer:cmr_det" cmr.id %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Details</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+</div>
 
 
+
+    
 
 
 {% endblock body %}
+
+
 
 
 

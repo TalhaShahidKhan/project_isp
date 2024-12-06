@@ -6,7 +6,7 @@ from .models import Customer,Package,Area
 class CustomerCreateFrom(ModelForm):
     class Meta:
         model = Customer
-        fields = ["name","password","area","package","duration","phone_number","active"]
+        fields = ["name","area","package","duration","phone_number","password","active"]
     def __init__(self, *args, **kwargs):
         admin = kwargs.pop('admin',None)  # Get the logged-in admin
         super(CustomerCreateFrom,self).__init__(*args, **kwargs)

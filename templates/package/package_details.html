@@ -4,16 +4,49 @@
 
 {% block body %}
 
+<section class="min-h-[70vh] flex flex-col md:flex-row items-center justify-center gap-5">
+    <div class="bg-white overflow-hidden shadow w-full md:w-1/2 lg:w-1/2 xl:w-1/3 rounded-lg border dark:bg-blue-900 ">
+        <div class="px-4 py-5 sm:px-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+                Customer details
+            </h3>
+        </div>
+        <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+            <dl class="sm:divide-y sm:divide-gray-200">
+                <div class="py-3 flex items-center justify-center gap-5  sm:px-6">
+                    <dt class="text-xl font-bold text-gray-500 dark:text-white">
+                        Package name
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
+                        {{pkg.name}}
+                    </dd>
+                </div>
+                <div class="py-3 flex items-center justify-center gap-5  sm:px-6">
+                    <dt class="text-xl font-bold text-gray-500 dark:text-white">
+                        Package Price
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
+                        {{pkg.price}}
+                    </dd>
+                </div>
+                <div class="py-3 flex items-center justify-center gap-5  sm:px-6">
+                    <dt class="text-xl font-bold text-gray-500 dark:text-white">
+                        Package Speed
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
+                        {{pkg.speed}}
+                    </dd>
+                </div>
+                <div class="py-3 flex items-center justify-center gap-5  sm:px-6">
+                    <a href="{% url "customer:pkg_list" %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Go Back</a>
 
-    <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-        <li class="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">{{pkg.name}}</li>
-        <li class="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">{{pkg.price}}</li>
-        <li class="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">{{pkg.speed}}</li>
-    </ul>
-
-    <div>
-        <a href="{% url "customer:pkg_list" %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Go Back</a>
+                </div>
+                
+                
+            </dl>
+        </div>
     </div>
+</section>
 
 
 {% endblock body %}

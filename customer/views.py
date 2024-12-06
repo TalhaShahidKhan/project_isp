@@ -53,7 +53,6 @@ class CustomerCreateView(LoginRequiredMixin,SubscriptionRequiredMixin, CreateVie
             messages.success(self.request, "Customer added successfully.")
             return super().form_valid(form)
         except Exception as e:
-            print(e)
             messages.error(self.request,"There is an error in API. Please Try again letter or contact Developer.")
             return redirect("customer:cmr_list")
 

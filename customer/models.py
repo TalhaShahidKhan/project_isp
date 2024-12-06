@@ -50,7 +50,7 @@ class Customer(models.Model):
     ]
     customer_id = models.CharField(max_length=10,null=True,blank=True)
     name = models.CharField(max_length=110)
-    password = models.CharField(max_length=110)
+    password = models.CharField(max_length=110,blank=True,null=True)
     phone_number = models.CharField(max_length=11,blank=False,null=False)
     admin = models.ForeignKey(User,related_name="customers",on_delete=models.CASCADE)
     area = models.ForeignKey(Area,related_name="customers",on_delete=models.SET_NULL,null=True)
