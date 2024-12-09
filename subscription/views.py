@@ -8,14 +8,20 @@ from django.urls import reverse_lazy
 from payment.bkash_utils import create_token,create_payment,exec_payment
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 from payment.models import UserPayment
 from datetime import datetime
 
-
+class CSRFExemptMixin(object):
+   @method_decorator(csrf_exempt)
+   def dispatch(self, *args, **kwargs):
+       return super(CSRFExemptMixin, self).dispatch(*args, **kwargs)
 
 
 class CreateSubscriptionView(LoginRequiredMixin, NoActiveSubscriptionMixin, View):
     def get(self, request):
+        if Subscription.objects.filter(user=request.user).exists():
+            Subscription.objects.get(user=request.user).delete()
         form = SubscriptionCreateForm()
         return render(request, 'subscriptions/create_subscription.html',context={"form":form})
 
@@ -23,6 +29,7 @@ class CreateSubscriptionView(LoginRequiredMixin, NoActiveSubscriptionMixin, View
         try:
             get_token = create_token()
             token = get_token["id_token"]
+            print(token)
 
             form = SubscriptionCreateForm(request.POST)
             if form.is_valid():
@@ -31,10 +38,8 @@ class CreateSubscriptionView(LoginRequiredMixin, NoActiveSubscriptionMixin, View
                 payment = create_payment(token=str(token),amount=str(price),payer_reference=str(number),minumber="01611663361")
                 if payment['agreementStatus'] == 'Initiated':
                     form.instance.user = self.request.user
-                    user = form.instance.user
-                    plan = form.instance.plan
+                    form.instance.is_active = False
                     form.save()
-                    Subscription.assign_plan_permissions(user,plan)
                     return redirect(payment['bkashURL'])
         except Exception as e:
             # form.add_error('plan',f"There is an error in API. Please contact developer. {e}")
@@ -68,10 +73,9 @@ class UpdatePlan(LoginRequiredMixin, View):
                 # print(payment)
                 if payment['agreementStatus'] == 'Initiated':
                     form.instance.user = self.request.user
-                    user = form.instance.user
-                    plan = form.instance.plan
+                    form.instance.is_active = False
                     form.save()
-                    Subscription.assign_plan_permissions(user,plan)
+                    # Subscription.assign_plan_permissions(user,plan)
                     return redirect(payment['bkashURL'])
         except Exception as e:
             form.add_error('plan',f"There is an error in API. Please contact developer. {e}")
@@ -84,39 +88,44 @@ class PlanListView(ListView):
     context_object_name='plans'
 
 
-
-
 @csrf_exempt
 def bkash_callback_user(request):
-    if request.method == "GET":
-        status = request.GET['status']
-        if status == 'cancel':
-            sub = Subscription.objects.filter(user=request.user,is_active=True)
-            sub.delete()
-            messages.error(request,"Payment Canceled")
-            return redirect("subs:plans")
-        if status == 'failed':
-            sub = Subscription.objects.filter(user=request.user,is_active=True)
-            sub.delete()
-            messages.error(request,"Payment Failed")
-            return redirect("subs:plans")
-    data = request.POST
+    status = request.GET['status']
+    if status == 'cancel':
+        print(request.user)
+        sub = Subscription.objects.get(user=request.user)
+        sub.delete()
+        messages.error(request,"Payment Canceled")
+        return redirect("subs:plans")
+    if status == 'failed':
+        sub = Subscription.objects.get(user=request.user)
+        sub.delete()
+        messages.error(request,"Payment Failed")
+        return redirect("subs:plans")
+    data = request.GET
+    print(data)
     payment_id = data.get('paymentID')
     try:
         get_token = create_token()
         token = get_token["id_token"]
-        exe_payment = exec_payment(token,paymentId=payment_id)
+        print(payment_id)
+        exe_payment = exec_payment(token=token,paymentId=str(payment_id))
+        print(exe_payment)
         date_string=exe_payment.get('agreementExecuteTime')
         date_string = date_string.replace(" GMT", "")
         if exe_payment.get('agreementStatus') == 'Completed' :
-            spayment=UserPayment.objects.create(user=request.user,payer_reference=exe_payment.get('payerReference'),payment_id=exe_payment.get('paymentID'),trxID=request.POST.get('trxID'),amount=request.POST.get('amount'),payment_exec_time=date_string)
+            subs = Subscription.objects.get(user=request.user)
+            subs.is_active = True
+            subs.save()
+            Subscription.assign_plan_permissions(request.user,request.user.subscription.plan)
+            spayment=UserPayment.objects.create(user=request.user,payer_reference=exe_payment.get('payerReference'),payment_id=exe_payment.get('paymentID'),trxID=request.GET.get('trxID'),amount=request.GET.get('amount'),payment_exec_time=date_string)
             messages.success(request,"Payment Successful")
             return redirect("subs:plans")
-        sub = Subscription.objects.filter(user=request.user,is_active=True)
-        sub.delete()
+        
         
     except Exception as e:
-        sub = Subscription.objects.filter(user=request.user,is_active=True)
+        sub = Subscription.objects.get(user=request.user,is_active=True)
         sub.delete()
+        print(e)
         messages.error(request,"Payment Failed. Please contact Developer")
         return redirect("subs:plans")

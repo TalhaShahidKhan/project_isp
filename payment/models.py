@@ -38,6 +38,6 @@ class UserPayment(models.Model):
     )
     payer_reference = models.CharField(max_length=11, blank=False, null=False)
     payment_id = models.CharField(max_length=250)
-    trxID = models.CharField(max_length=150)
+    trxID = models.CharField(max_length=150,null=True)
     payment_exec_time = models.DateTimeField()
     amount = models.CharField(max_length=20)

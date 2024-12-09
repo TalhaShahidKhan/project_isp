@@ -44,14 +44,20 @@ def active_user(conn:routeros_api.RouterOsApiPool,uid):
     secret_users = api.get_resource('/ppp/secret')
     user = secret_users.get(id=uid)
     if user:
-        secret_users.set(id=uid, disabled='no')
+        secret_users.set(id=uid, disabled='false')
 
 
-def deactivate_user(conn:routeros_api.RouterOsApiPool,username):
+def deactivate_user(conn:routeros_api.RouterOsApiPool,uid):
+    api = conn.get_api()
+    secret_users = api.get_resource('/ppp/secret')
+    user = secret_users.get(id=uid)
+    if user:
+        secret_users.set(id=uid, disabled='true')
     api = conn.get_api()
     active_ppp_users = api.get_resource('/ppp/active')
-    active_users = active_ppp_users.get(name=username)
+    active_users = active_ppp_users.get(id=uid)
 
     if active_users:
         for user in active_users:
             active_ppp_users.remove(id=user['.id'])
+            

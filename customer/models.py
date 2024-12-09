@@ -82,7 +82,7 @@ class Customer(models.Model):
         conn.disconnect()
     def disable_internet(self):
         conn=self.get_connection()
-        deactivate_user(conn=conn,username=self.name)
+        deactivate_user(conn=conn,uid=self.customer_id)
         self.active = False
         conn.disconnect()
 
@@ -101,7 +101,9 @@ class Customer(models.Model):
         conn = self.get_connection()
         update_mikrotik_user(conn=conn,pkg=self.package.name,username=self.name,password=self.password)
         conn.disconnect()
-
+    def save(self):
+        self.set_expairy()
+        return super().save()
     def __str__(self) -> str:
         return f"{self.name}-->{self.admin}"
     

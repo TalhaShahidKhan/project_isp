@@ -45,7 +45,7 @@ class SubscriptionPlan(models.Model):
 
 class Subscription(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='subscription')
-    plan = models.ForeignKey(SubscriptionPlan, on_delete=models.CASCADE)
+    plan = models.ForeignKey(SubscriptionPlan, on_delete=models.CASCADE,null=True,blank=True)
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField(blank=True,null=True)
     is_active = models.BooleanField(default=True)

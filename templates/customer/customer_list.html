@@ -40,8 +40,6 @@
                 <th scope="col" class="px-6 py-3">
                 </th>
                 <th scope="col" class="px-6 py-3">
-                </th>
-                <th scope="col" class="px-6 py-3">
                     Status
                 </th>
                 <th scope="col" class="px-6 py-3"></th>
@@ -55,19 +53,11 @@
                         <div class="text-2xl font-semibold">{{cmr.name}}</div>
                     </div>  
                 </th>
+                
                 <td class="px-6 py-4">
-                    <div class="flex items-center">
-                        <a href="{% url "customer:cmr_upd" cmr.id %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Update Customer</a>
-                    </div> 
-               </td>
-                <td class="px-6 py-4">
-                    <div class="flex items-center">
-                        <form action="{% url "customer:cmr_del" cmr.id %}" method="post">
-                            {% csrf_token %}
-                            <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Delete Customer</button>
-                        </form>
-                    </div>
+                    <a href="{% url "customer:cmr_det" cmr.id %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Details</a>
                 </td>
+                
                 <td class="px-6 py-4">
                     {% if cmr.active %}
                     <div class="flex items-center justify-start">
@@ -81,7 +71,12 @@
                     {% endif %}
                 </td>
                 <td class="px-6 py-4">
-                    <a href="{% url "customer:cmr_det" cmr.id %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Details</a>
+                    <div class="flex items-center">
+                        <form action="{% url "customer:cmr_del" cmr.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Delete Customer</button>
+                        </form>
+                    </div>
                 </td>
             </tr>
             {% endfor %}

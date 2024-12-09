@@ -50,6 +50,8 @@ class CustomerCreateView(LoginRequiredMixin,SubscriptionRequiredMixin, CreateVie
                 return self.form_invalid(form)
             self.object=form.save(commit=False)
             self.object.add_to_mik()
+            if form.instance.active == "Yes":
+                self.object.enable_internet()
             messages.success(self.request, "Customer added successfully.")
             return super().form_valid(form)
         except Exception as e:
@@ -66,6 +68,7 @@ class CustomerUpdateView(LoginRequiredMixin,SubscriptionRequiredMixin, UpdateVie
     model = Customer
     fields =  ["name","password","area","package","duration","phone_number"]
     template_name = "customer/customer_update.html"
+    context_object_name = "cmr"
     success_url = reverse_lazy("customer:cmr_list")
 
     def form_valid(self, form):
